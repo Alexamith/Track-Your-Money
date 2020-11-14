@@ -21,4 +21,8 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+Route::get('/monedas', function () {
+    return view('cruds.monedas');
+})->name('mon');
+
 
