@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('conten')
+
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -77,12 +78,13 @@
 @endsection
 
 @section('content')
+<br><br>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-lg-7">
             <div class="card shadow-lg border-0 rounded-lg mt-5">
-                <div class="card-header">
-                    <h3 class="text-center font-weight-light my-4">Create Account</h3>
+                <div class="card-header" style="background-color:  #ffcb18; color: white;">
+                    <h3 class="text-center font-weight-light my-4">Crear cuenta Track <i class="fas fa-dollar-sign"></i></h3>
                 </div>
                 <div class="card-body">
                     <form method="POST" action="{{ route('register') }}">
@@ -128,16 +130,14 @@
                             </div>
                         </div>
                         <div class="form-group mt-4 mb-0">
-                            <button type="submit" class="btn btn-primary btn-block">
-                                {{ __('Register') }}
+                            <button type="submit" class="btn btn-warning btn-block">
+                                {{ __('Regitrarme') }}
                             </button>
                         </div>
-
-                        <!-- <div class="form-group mt-4 mb-0"><a class="btn btn-primary btn-block" href="login.html">Create Account</a></div> -->
                     </form>
                 </div>
                 <div class="card-footer text-center">
-                    <div class="small"><a href="login.html">Have an account? Go to login</a></div>
+                    <div class="small"><a href="login.html">Ya tienes una cuenta?</a></div>
                 </div>
             </div>
         </div>

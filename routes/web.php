@@ -20,9 +20,13 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/monedas', [App\Http\Controllers\MonedaController::class, 'index'])->name('moneda');
+Route::get('/cuentas', [App\Http\Controllers\CuentaController::class, 'index'])->name('cuenta');
+Route::get('/categorias', [App\Http\Controllers\ControllerCategoria::class, 'index'])->name('categoria');
+Route::get('/transacciones', [App\Http\Controllers\TransaccionController::class, 'index'])->name('transaccion');
 
-Route::get('/monedas', function () {
-    return view('cruds.monedas');
-})->name('mon');
+// Route::get('/monedas', function () {
+//     return view('cruds.monedas');
+// })->name('mon');
 
 

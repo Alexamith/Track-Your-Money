@@ -6,7 +6,7 @@
     <div class="card mb-4">
         <div class="card-header" style="background-color:  #ffcb18; color: white;">
             <i class="fas fa-table mr-1"></i>
-            <strong>Mis Monedas</strong>
+            <strong>Mis Transacciones</strong>
         </div>
         <div class="card-body">
             <div class="table-responsive">
