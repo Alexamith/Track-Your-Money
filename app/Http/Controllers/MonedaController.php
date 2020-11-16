@@ -89,6 +89,6 @@ class MonedaController extends Controller
      */
     public function destroy(Moneda $moneda)
     {
-        //
+        return redirect('/monedas');
     }
 }

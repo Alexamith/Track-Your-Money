@@ -25,8 +25,8 @@ Route::get('/cuentas', [App\Http\Controllers\CuentaController::class, 'index'])-
 Route::get('/categorias', [App\Http\Controllers\ControllerCategoria::class, 'index'])->name('categoria');
 Route::get('/transacciones', [App\Http\Controllers\TransaccionController::class, 'index'])->name('transaccion');
 
-// Route::get('/monedas', function () {
-//     return view('cruds.monedas');
-// })->name('mon');
+Route::get('/deleteCoins', [App\Http\Controllers\MonedaController::class, 'destroy'])->name('deleteCoin');
+
+
 
 

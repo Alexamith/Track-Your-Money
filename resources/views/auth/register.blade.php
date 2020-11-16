@@ -83,7 +83,7 @@
     <div class="row justify-content-center">
         <div class="col-lg-7">
             <div class="card shadow-lg border-0 rounded-lg mt-5">
-                <div class="card-header" style="background-color:  #ffcb18; color: white;">
+                <div class="card-header" style="background-color:  #2874a6; color: white;">
                     <h3 class="text-center font-weight-light my-4">Crear cuenta Track <i class="fas fa-dollar-sign"></i></h3>
                 </div>
                 <div class="card-body">
@@ -130,7 +130,7 @@
                             </div>
                         </div>
                         <div class="form-group mt-4 mb-0">
-                            <button type="submit" class="btn btn-warning btn-block">
+                            <button type="submit" class="btn btn-block" style="background-color:  #2874a6; color: white;">
                                 {{ __('Regitrarme') }}
                             </button>
                         </div>
