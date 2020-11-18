@@ -16,6 +16,7 @@ class MonedaController extends Controller
     {
         $this->middleware('auth');
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -23,7 +24,15 @@ class MonedaController extends Controller
      */
     public function index()
     {
-        return view('cruds.monedas');
+        $usuario = \Auth::user()->id;
+        $monedas = Moneda::where('usuario_id',$usuario)->get();
+        if(count($monedas) != 0){
+            return view('cruds.monedas',['monedas'=>$monedas]);
+        }else{
+            return view('cruds.monedas');
+        }
+        
+        
     }
 
     /**
@@ -44,7 +53,15 @@ class MonedaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $dataMoneda =[
+            "nombre_corto"=>$request->name,
+            "simbolo"=>$request->simbolo,
+            "descripcion"=>$request->descripcion,
+            "tasa"=>$request->tasa_cambio,
+            "usuario_id"=>\Auth::user()->id
+        ];
+        Moneda::create($dataMoneda);
+        return redirect()->route('moneda');
     }
 
     /**
@@ -87,8 +104,10 @@ class MonedaController extends Controller
      * @param  \App\Models\Moneda  $moneda
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Moneda $moneda)
+    public function destroy($id)
     {
+        $moneda = Moneda::find($id);
+        $moneda->delete();
         return redirect('/monedas');
     }
 }

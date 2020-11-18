@@ -16,16 +16,29 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('auth.login');
 });
+    // Route::get('/home', function () {
+    //     $un_dolar_es_igual_a = 610.74;
+    //     $un_colon_es_igual_a = 0.0016;
 
+    //     $cantidad_de_colones = 10564;
+    //     $cantidad_de_dolares = 33;
+
+    //     $conversion_euro_a_colones = $un_dolar_es_igual_a * $cantidad_de_dolares;
+    //     $conversion_colones_a_dolares = $un_colon_es_igual_a * $cantidad_de_colones;
+
+    //     echo $cantidad_de_dolares." dólares equivalen a ".number_format($conversion_euro_a_colones, 2)." <hr>";
+    //     echo number_format($cantidad_de_colones, 2)." colones equivalen a ".number_format($conversion_colones_a_dolares, 2)." dólares";
+    // });
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/monedas', [App\Http\Controllers\MonedaController::class, 'index'])->name('moneda');
+Route::post('/monedas', [App\Http\Controllers\MonedaController::class, 'store'])->name('registra_moneda');
 Route::get('/cuentas', [App\Http\Controllers\CuentaController::class, 'index'])->name('cuenta');
 Route::get('/categorias', [App\Http\Controllers\ControllerCategoria::class, 'index'])->name('categoria');
 Route::get('/transacciones', [App\Http\Controllers\TransaccionController::class, 'index'])->name('transaccion');
 
-Route::get('/deleteCoins', [App\Http\Controllers\MonedaController::class, 'destroy'])->name('deleteCoin');
+Route::get('/deleteCoins/{id}', [App\Http\Controllers\MonedaController::class, 'destroy'])->name('deleteCoins');
 
 
 

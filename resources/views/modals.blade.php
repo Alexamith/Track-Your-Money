@@ -2,7 +2,7 @@
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <form method="POST" action="{{ route('register') }}">
+            <form method="POST" action="{{ route('registra_moneda') }}">
                 @csrf
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle">Crear Moneda</h5>
@@ -15,7 +15,7 @@
                         <div class="form-group">
                             <div class="form-group">
                                 <label class="small mb-1" for="inputFirstName">Nombre</label>
-                                <input class="form-control py-4" id="name" name="name" type="text" placeholder="Enter first name" />
+                                <input class="form-control py-4" id="name" name="name" type="text" placeholder="Nombre" />
                                 @error('name')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -26,7 +26,7 @@
 
                         <div class="form-group">
                             <label class="small mb-1" for="inputEmailAddress">Descripción</label>
-                            <input class="form-control py-4 @error('descripcion') is-invalid @enderror" value="{{ old('descripcion') }}" required autocomplete="descripcion" id="descripcion" name="descripcion" type="descripcion" aria-describedby="descripcionHelp" placeholder="descripcion" />
+                            <input class="form-control py-4 @error('descripcion') is-invalid @enderror" value="{{ old('descripcion') }}" required autocomplete="descripcion" id="descripcion" name="descripcion" type="descripcion" aria-describedby="descripcionHelp" placeholder="Descripcion" />
                         </div>
                         <div class="form-row">
                             <div class="col-md-6">
@@ -43,7 +43,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="small mb-1" for="inputConfirmPassword">Tasa de cambio</label>
-                                    <input class="form-control py-4" id="tasa_cambio" name="tasa_cambio" type="number" required autocomplete="new-tasa_cambio" />
+                                    <input class="form-control py-4" id="tasa_cambio" name="tasa_cambio" type="text" required autocomplete="new-tasa_cambio" placeholder="610.15"/>
                                 </div>
                             </div>
                         </div>

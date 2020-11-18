@@ -144,7 +144,7 @@
                     </div>
                 </div>
                 <div class="sb-sidenav-footer" style="background-color:   #3786eb;">
-                    <div class="small" style="color: white;">Logged in as:</div>
+                    <div class="small" style="color: white;">Logueado como:</div>
                     <strong>
                         <p style="color: white;">{{ Auth::user()->email }}</p>
                     </strong>

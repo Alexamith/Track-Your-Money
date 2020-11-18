@@ -7,5 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Moneda extends Model
 {
-    use HasFactory;
+    protected $table = 'moneda';
+    protected $fillable = ['nombre_corto', 'simbolo','descripcion','tasa','usuario_id'];
 }
