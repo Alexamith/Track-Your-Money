@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Moneda;
 use Illuminate\Http\Request;
+use Laravel\Ui\Presets\React;
 
 class MonedaController extends Controller
 {
@@ -25,14 +26,12 @@ class MonedaController extends Controller
     public function index()
     {
         $usuario = \Auth::user()->id;
-        $monedas = Moneda::where('usuario_id',$usuario)->get();
-        if(count($monedas) != 0){
-            return view('cruds.monedas',['monedas'=>$monedas]);
-        }else{
+        $monedas = Moneda::where('usuario_id', $usuario)->get();
+        if (count($monedas) != 0) {
+            return view('cruds.monedas', ['monedas' => $monedas]);
+        } else {
             return view('cruds.monedas');
         }
-        
-        
     }
 
     /**
@@ -53,12 +52,12 @@ class MonedaController extends Controller
      */
     public function store(Request $request)
     {
-        $dataMoneda =[
-            "nombre_corto"=>$request->name,
-            "simbolo"=>$request->simbolo,
-            "descripcion"=>$request->descripcion,
-            "tasa"=>$request->tasa_cambio,
-            "usuario_id"=>\Auth::user()->id
+        $dataMoneda = [
+            "nombre_corto" => $request->name,
+            "simbolo" => $request->simbolo,
+            "descripcion" => $request->descripcion,
+            "tasa" => $request->tasa_cambio,
+            "usuario_id" => \Auth::user()->id
         ];
         Moneda::create($dataMoneda);
         return redirect()->route('moneda');
@@ -81,9 +80,13 @@ class MonedaController extends Controller
      * @param  \App\Models\Moneda  $moneda
      * @return \Illuminate\Http\Response
      */
-    public function edit(Moneda $moneda)
+    public function edit($id)
     {
-        //
+
+        $moneda = Moneda::find($id);
+        return redirect()->route("moneda")
+            ->with("mensaje", 'dasdadasdasdas')
+            ->with("tipo", $moneda);
     }
 
     /**
@@ -93,9 +96,15 @@ class MonedaController extends Controller
      * @param  \App\Models\Moneda  $moneda
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Moneda $moneda)
+    public function update(Request $request)
     {
-        //
+        $Moneda = Moneda::findOrFail($request->id);
+        $Moneda->nombre_corto = $request->name;
+        $Moneda->simbolo =  $request->simbolo;
+        $Moneda->descripcion = $request->descripcion;
+        $Moneda->tasa = $request->tasa_cambio;
+        $Moneda->save();
+        return redirect('/monedas');
     }
 
     /**
