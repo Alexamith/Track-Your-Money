@@ -112,8 +112,10 @@ class CuentaController extends Controller
      * @param  \App\Models\Cuenta  $cuenta
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Cuenta $cuenta)
+    public function destroy($id)
     {
-        //
+        $cuenta = Cuenta::find($id);
+        $cuenta->delete();
+        return redirect()->route('cuenta');
     }
 }

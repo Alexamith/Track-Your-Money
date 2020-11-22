@@ -64,7 +64,7 @@
                                 <a href="{{ url('editMoneda/'.$cuenta->id) }}" id="btn-edit" class="btn btn-outline-*" style="border-color: #1fd528 ;">
                                     <i class="fas fa-edit" style="color: #1fd528 ;"></i>
                                 </a>
-                                <a href="{{ url('deleteCoins/'.$cuenta->id) }}" class="btn btn-outline-*" style="border-color: #ff0000 ;">
+                                <a href="{{ url('borrarCuenta/'.$cuenta->id) }}" class="btn btn-outline-*" style="border-color: #ff0000 ;">
                                     <i class="fas fa-trash-alt" style="color: #ff0000 ;"></i>
                                 </a></td>
                         </tr>
