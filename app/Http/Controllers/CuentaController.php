@@ -34,7 +34,7 @@ class CuentaController extends Controller
         $monedas = \DB::select("select id,concat(nombre_corto,' ',simbolo) as nombre_corto from moneda where usuario_id =".$usuario);
         if (count($cuentas) != 0) {
             foreach ($cuentas as $key) {
-                $key->saldo_inicial = number_format($key->saldo_inicial);
+                $key->saldo_inicial = number_format($key->saldo_inicial,2);
             }
             return view('cruds.cuentas', ['cuentas' => $cuentas,'monedas'=>$monedas]);
         } else {
@@ -89,9 +89,12 @@ class CuentaController extends Controller
      * @param  \App\Models\Cuenta  $cuenta
      * @return \Illuminate\Http\Response
      */
-    public function edit(Cuenta $cuenta)
+    public function edit($id)
     {
-        //
+        $cuenta = Cuenta::find($id);
+        return redirect()->route("cuenta")
+            ->with("mensaje", 'dasdadasdasdas')
+            ->with("cuenta", $cuenta);
     }
 
     /**
@@ -101,9 +104,16 @@ class CuentaController extends Controller
      * @param  \App\Models\Cuenta  $cuenta
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Cuenta $cuenta)
+    public function update(Request $request)
     {
         //
+        $Cuenta = Cuenta::findOrFail($request->id);
+        $Cuenta->moneda= $request->moneda;
+        $Cuenta->nombre_corto= $request->name;
+        $Cuenta->descripcion= $request->descripcion;
+        $Cuenta->saldo_inicial= $request->saldo;
+        $Cuenta->save();
+        return redirect()->route('cuenta');
     }
 
     /**

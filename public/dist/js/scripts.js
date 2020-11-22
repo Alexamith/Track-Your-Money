@@ -23,3 +23,4 @@
 
 
 $("#modalEdit").modal();
+$("#modal_editar_cuenta").modal();

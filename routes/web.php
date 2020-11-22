@@ -50,4 +50,6 @@ Route::get('/deleteCoins/{id}', [App\Http\Controllers\MonedaController::class, '
 Route::get('/cuentas', [App\Http\Controllers\CuentaController::class, 'index'])->name('cuenta');
 Route::post('/cuentas', [App\Http\Controllers\CuentaController::class, 'store'])->name('registra_cuenta');
 Route::get('/borrarCuenta/{id}', [App\Http\Controllers\CuentaController::class, 'destroy'])->name('borrarCuenta');
+Route::get('/editarCuenta/{id}', [App\Http\Controllers\CuentaController::class, 'edit'])->name('editarCuenta');
+Route::post('/actualizarCuenta', [App\Http\Controllers\CuentaController::class, 'update'])->name('actualizarCuenta');
 

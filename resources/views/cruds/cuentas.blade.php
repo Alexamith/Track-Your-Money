@@ -61,7 +61,7 @@
                             <td>{{$cuenta->saldo_inicial}}</td>
                             <td>{{$cuenta->created_at}}</td>
                             <td>
-                                <a href="{{ url('editMoneda/'.$cuenta->id) }}" id="btn-edit" class="btn btn-outline-*" style="border-color: #1fd528 ;">
+                                <a href="{{ url('editarCuenta/'.$cuenta->id) }}" id="" class="btn btn-outline-*" style="border-color: #1fd528 ;">
                                     <i class="fas fa-edit" style="color: #1fd528 ;"></i>
                                 </a>
                                 <a href="{{ url('borrarCuenta/'.$cuenta->id) }}" class="btn btn-outline-*" style="border-color: #ff0000 ;">
