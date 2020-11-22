@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Cuenta extends Model
 {
     protected $table = 'cuenta';
-    protected $fillable = ['nombre_corto', 'simbolo','descripcion','tasa','usuario_id'];
+    protected $fillable = ['moneda','nombre_corto','descripcion','saldo_inicial','usuario_id'];
 }
