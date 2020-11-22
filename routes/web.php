@@ -36,7 +36,11 @@ Route::get('/monedas', [App\Http\Controllers\MonedaController::class, 'index'])-
 Route::post('/monedas', [App\Http\Controllers\MonedaController::class, 'store'])->name('registra_moneda');
 Route::get('/editMoneda/{id}', [App\Http\Controllers\MonedaController::class, 'edit'])->name('editMoneda');
 Route::post('/update', [App\Http\Controllers\MonedaController::class, 'update'])->name('update');
+
 Route::get('/cuentas', [App\Http\Controllers\CuentaController::class, 'index'])->name('cuenta');
+
+
+
 Route::get('/categorias', [App\Http\Controllers\ControllerCategoria::class, 'index'])->name('categoria');
 Route::get('/transacciones', [App\Http\Controllers\TransaccionController::class, 'index'])->name('transaccion');
 

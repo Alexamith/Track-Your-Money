@@ -7,5 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Cuenta extends Model
 {
-    use HasFactory;
+    protected $table = 'cuenta';
+    protected $fillable = ['nombre_corto', 'simbolo','descripcion','tasa','usuario_id'];
 }

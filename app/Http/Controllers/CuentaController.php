@@ -23,7 +23,23 @@ class CuentaController extends Controller
      */
     public function index()
     {
-        return view('cruds.cuentas');
+        
+        $usuario = \Auth::user()->id;
+        $sql ="select c.id,CONCAT(m.nombre_corto,' ',m.simbolo) as nombre,m.tasa,c.nombre_corto,c.descripcion,c.saldo_inicial, c.created_at
+        from cuenta as c
+        join moneda as m
+        on c.moneda = m.id
+        and m.usuario_id =".$usuario;
+        $cuentas = \DB::select($sql);
+        if (count($cuentas) != 0) {
+            foreach ($cuentas as $key) {
+                $key->saldo_inicial = number_format($key->saldo_inicial);
+            }
+            return view('cruds.cuentas', ['monedas' => $cuentas]);
+        } else {
+            return view('cruds.cuentas');
+        }
+        
     }
 
     /**
