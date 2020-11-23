@@ -24,7 +24,7 @@ class ControllerCategoria extends Controller
     public function index()
     {
         $usuario = \Auth::user()->id;
-        $sql = "select c.categoria_padre, tc.tipo, c.descripcion, c.presupuesto, c.created_at
+        $sql = "select c.id,c.categoria_padre, tc.tipo, c.descripcion, c.presupuesto, c.created_at
         from categoria as c
         join tipo_categoria as tc
         on c.tipo = tc.id
@@ -111,8 +111,10 @@ class ControllerCategoria extends Controller
      * @param  \App\Models\Categoria  $categoria
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Categoria $categoria)
+    public function destroy($id)
     {
-        //
+        $categoria = Categoria::find($id);
+        $categoria->delete();
+        return redirect()->route('categoria');
     }
 }

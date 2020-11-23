@@ -56,7 +56,7 @@
                                 <a href="" id="btn-edit" class="btn btn-outline-*" style="border-color: #2874a6 ;">
                                     <i class="fas fa-edit" style="color: #2874a6 ;"></i>
                                 </a>
-                                <a href=""  class="btn btn-outline-*" style="border-color: #ff0000 ;">
+                                <a href="{{ url('borrarCategoria/'.$categoria->id) }}"  class="btn btn-outline-*" style="border-color: #ff0000 ;">
                                     <i class="fas fa-trash-alt" style="color: #ff0000 ;"></i>
                                 </a></td>
                         </tr>
