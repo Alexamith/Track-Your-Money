@@ -23,7 +23,23 @@ class ControllerCategoria extends Controller
      */
     public function index()
     {
-        return view('cruds.categoria');
+        $usuario = \Auth::user()->id;
+        $sql = "select c.categoria_padre, tc.tipo, c.descripcion, c.presupuesto, c.created_at
+        from categoria as c
+        join tipo_categoria as tc
+        on c.tipo = tc.id
+        and usuario_id =".$usuario;
+        $categorias = \DB::select($sql);
+        $tipos = \DB::select("select * from tipo_categoria");
+
+        if (count($categorias) != 0) {
+            foreach ($categorias as $value) {
+                $value->presupuesto = number_format($value->presupuesto,2);
+            }
+            return view('cruds.categoria', ['categorias' => $categorias,'tipos' => $tipos]);
+        } else {
+            return view('cruds.categoria',['tipos' => $tipos]);
+        }
     }
 
     /**

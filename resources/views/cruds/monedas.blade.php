@@ -32,7 +32,7 @@
                             <th>Descripción</th>
                             <th>Tasa</th>
                             <th>Fecha de creación</th>
-                            <th><a href="#" class="btn btn-outline-*" style="border-color: #1fd528;" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-plus-square" style="color: #1fd528 ;"></i></a></th>
+                            <th><a href="#" class="btn btn-outline-*" style="border-color: #2874a6;" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-plus-square" style="color: #2874a6 ;"></i></a></th>
                         </tr>
                     </thead>
                     <tfoot>
@@ -55,8 +55,8 @@
                             <td>{{$moneda->tasa}}</td>
                             <td>{{$moneda->created_at}}</td>
                             <td>
-                                <a href="{{ url('editMoneda/'.$moneda->id) }}" id="btn-edit" class="btn btn-outline-*" style="border-color: #1fd528 ;">
-                                    <i class="fas fa-edit" style="color: #1fd528 ;"></i>
+                                <a href="{{ url('editMoneda/'.$moneda->id) }}" id="btn-edit" class="btn btn-outline-*" style="border-color: #2874a6 ;">
+                                    <i class="fas fa-edit" style="color: #2874a6 ;"></i>
                                 </a>
                                 <a href="{{ url('deleteCoins/'.$moneda->id) }}"  class="btn btn-outline-*" style="border-color: #ff0000 ;">
                                     <i class="fas fa-trash-alt" style="color: #ff0000 ;"></i>
