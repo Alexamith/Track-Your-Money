@@ -39,9 +39,6 @@ Route::post('/update', [App\Http\Controllers\MonedaController::class, 'update'])
 
 
 
-
-
-Route::get('/categorias', [App\Http\Controllers\ControllerCategoria::class, 'index'])->name('categoria');
 Route::get('/transacciones', [App\Http\Controllers\TransaccionController::class, 'index'])->name('transaccion');
 
 Route::get('/deleteCoins/{id}', [App\Http\Controllers\MonedaController::class, 'destroy'])->name('deleteCoins');
@@ -53,3 +50,7 @@ Route::get('/borrarCuenta/{id}', [App\Http\Controllers\CuentaController::class, 
 Route::get('/editarCuenta/{id}', [App\Http\Controllers\CuentaController::class, 'edit'])->name('editarCuenta');
 Route::post('/actualizarCuenta', [App\Http\Controllers\CuentaController::class, 'update'])->name('actualizarCuenta');
 
+
+// Rutas categorias
+Route::get('/categorias', [App\Http\Controllers\ControllerCategoria::class, 'index'])->name('categoria');
+Route::post('/categorias', [App\Http\Controllers\ControllerCategoria::class, 'store'])->name('crear_categoria');

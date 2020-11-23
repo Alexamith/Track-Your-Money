@@ -26,7 +26,7 @@
 
                         <div class="form-group">
                             <label class="small mb-1" for="inputEmailAddress">Descripción</label>
-                            <input class="form-control py-4 @error('saldo') is-invalid @enderror" value="{{ old('descripcion') }}" required autocomplete="descripcion" id="descripcion" name="descripcion" type="descripcion" aria-describedby="descripcionHelp" placeholder="Descripcion" />
+                            <input class="form-control py-4 @error('presupuesto') is-invalid @enderror" value="{{ old('descripcion') }}" required autocomplete="descripcion" id="descripcion" name="descripcion" type="descripcion" aria-describedby="descripcionHelp" placeholder="Descripcion" />
                         </div>
                         <div class="form-row">
                             <div class="col-md-6">
@@ -166,7 +166,7 @@
                             <label class="small mb-1" for="inputEmailAddress">Descripción</label>
                             <input class="form-control py-4 @error('descripcion') is-invalid @enderror" value="{{ old('descripcion') }}" required autocomplete="descripcion" id="descripcion" name="descripcion" type="descripcion" aria-describedby="descripcionHelp" placeholder="Descripcion" />
                         </div>
-                        <!-- Saldo -->
+                        <!-- presupuesto -->
                         <div class="form-group">
                             <label class="small mb-1" for="saldo">Saldo inicial</label>
                             <input class="form-control py-4 @error('saldo') is-invalid @enderror" value="{{ old('saldo') }}" required autocomplete="saldo" id="saldo" name="saldo" type="text" aria-describedby="saldoHelp" placeholder="saldo" />
@@ -255,7 +255,7 @@
 <div class="modal fade" id="modal_crear_categoria_padre" tabindex="-1" role="dialog" aria-labelledby="modal_crear_cuentaTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <form method="POST" action="{{ route('registra_cuenta') }}">
+            <form method="POST" action="{{ route('crear_categoria') }}">
                 @csrf
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle">Crear categoría</h5>
@@ -269,11 +269,11 @@
 
                             <!-- select -->
                             <div class="form-group">
-                                <label class="small mb-1" for="moneda">Seleccione una moneda</label>
-                                <select class="form-control form-control-lg"id="moneda" name ="moneda" style="font-size: 15px;">
-                                @isset($monedas)
-                                    @foreach ($monedas as $moneda)
-                                    <option value="{{$moneda->id}}" style="font-size: 15px;" >{{$moneda->nombre_corto}}</option>
+                                <label class="small mb-1" for="moneda">Seleccione un tipo de categoría</label>
+                                <select class="form-control form-control-lg"id="tipo" name ="tipo" style="font-size: 15px;">
+                                @isset($tipos)
+                                    @foreach ($tipos as $tipo)
+                                    <option value="{{$tipo->id}}" style="font-size: 15px;" >{{$tipo->tipo}}</option>
                                     @endforeach
                                 @endisset
 
@@ -297,8 +297,8 @@
                         </div>
                         <!-- Saldo -->
                         <div class="form-group">
-                            <label class="small mb-1" for="saldo">Saldo inicial</label>
-                            <input class="form-control py-4 @error('saldo') is-invalid @enderror" value="{{ old('saldo') }}" required autocomplete="saldo" id="saldo" name="saldo" type="text" aria-describedby="saldoHelp" placeholder="saldo" />
+                            <label class="small mb-1" for="presupuesto">Presupuesto</label>
+                            <input class="form-control py-4 @error('presupuesto') is-invalid @enderror" value="{{ old('presupuesto') }}" required autocomplete="presupuesto" id="presupuesto" name="presupuesto" type="text" aria-describedby="presupuestoHelp" placeholder="presupuesto" />
                         </div>
                     </div>
                 </div>

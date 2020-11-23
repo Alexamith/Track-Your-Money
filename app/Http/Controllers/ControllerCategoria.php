@@ -60,7 +60,15 @@ class ControllerCategoria extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $dataCategoria = [
+            "categoria_padre" => $request->name,
+            "tipo" => $request->tipo,
+            "descripcion" => $request->descripcion,
+            "presupuesto" => $request->presupuesto,
+            "usuario_id" => \Auth::user()->id
+        ];
+        Categoria::create($dataCategoria);
+        return redirect()->route('categoria');
     }
 
     /**
