@@ -53,7 +53,7 @@
                             <td>{{$categoria->presupuesto}}</td>
                             <td>{{$categoria->created_at}}</td>
                             <td>
-                                <a href="" id="btn-edit" class="btn btn-outline-*" style="border-color: #2874a6 ;">
+                                <a href="{{ url('editarCategoria/'.$categoria->id) }}" id="btn-edit" class="btn btn-outline-*" style="border-color: #2874a6 ;">
                                     <i class="fas fa-edit" style="color: #2874a6 ;"></i>
                                 </a>
                                 <a href="{{ url('borrarCategoria/'.$categoria->id) }}"  class="btn btn-outline-*" style="border-color: #ff0000 ;">

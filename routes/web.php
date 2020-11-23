@@ -55,3 +55,5 @@ Route::post('/actualizarCuenta', [App\Http\Controllers\CuentaController::class, 
 Route::get('/categorias', [App\Http\Controllers\ControllerCategoria::class, 'index'])->name('categoria');
 Route::post('/categorias', [App\Http\Controllers\ControllerCategoria::class, 'store'])->name('crear_categoria');
 Route::get('/borrarCategoria/{id}', [App\Http\Controllers\ControllerCategoria::class, 'destroy'])->name('borrarCategoria');
+Route::get('/editarCategoria/{id}', [App\Http\Controllers\ControllerCategoria::class, 'edit'])->name('editarCategoria');
+Route::post('/actualizarCategoria', [App\Http\Controllers\ControllerCategoria::class, 'update'])->name('actualizarCategoria');

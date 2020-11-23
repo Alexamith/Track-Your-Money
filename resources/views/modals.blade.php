@@ -310,3 +310,71 @@
         </div>
     </div>
 </div>
+
+<!-- Modal editar categoria-->
+@if(session("mensaje") && session("categoria"))
+<div class="modal fade" id="modal_editar_categoria_padre" tabindex="-1" role="dialog" aria-labelledby="modal_crear_cuentaTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form method="POST" action="{{ route('actualizarCategoria') }}">
+                @csrf
+                <input type="hidden" id="id" name="id" value="{{session('categoria')->id}}">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Editar categoría</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="card-body">
+                        <div class="form-group">
+
+                            <!-- select -->
+                            <div class="form-group">
+                                <label class="small mb-1" for="moneda">Seleccione un tipo de categoría</label>
+                                <select class="form-control form-control-lg"id="tipo" name ="tipo" style="font-size: 15px;">
+                                @isset($tipos)
+                                    @foreach ($tipos as $tipo)
+                                        @if($tipo->id == session('categoria')->tipo)
+                                        <option value="{{$tipo->id}}" style="font-size: 15px;"  selected="selected">{{$tipo->tipo}}</option>
+                                        @else
+                                        <option value="{{$tipo->id}}" style="font-size: 15px;">{{$tipo->tipo}}</option>
+                                        @endif
+                                        
+                                    @endforeach
+                                @endisset
+
+                                </select>
+                            </div>
+                            <!-- Nombre -->
+                            <div class="form-group">
+                                <label class="small mb-1" for="inputFirstName">Nombre</label>
+                                <input class="form-control py-4" id="name" name="name" type="text" value="{{$categoria->categoria_padre}}" placeholder="Nombre" />
+                                @error('name')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <!-- Descripcion -->
+                        <div class="form-group">
+                            <label class="small mb-1" for="inputEmailAddress">Descripción</label>
+                            <input class="form-control py-4 @error('descripcion') is-invalid @enderror" value="{{session('categoria')->descripcion}}" required autocomplete="descripcion" id="descripcion" name="descripcion" type="descripcion" aria-describedby="descripcionHelp" placeholder="Descripcion" />
+                        </div>
+                        <!-- Saldo -->
+                        <div class="form-group">
+                            <label class="small mb-1" for="presupuesto">Presupuesto</label>
+                            <input class="form-control py-4 @error('presupuesto') is-invalid @enderror" value="{{session('categoria')->presupuesto}}" required autocomplete="presupuesto" id="presupuesto" name="presupuesto" type="text" aria-describedby="presupuestoHelp" placeholder="presupuesto" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn" style="background-color:  #2874a6; color: white;">Editar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endif

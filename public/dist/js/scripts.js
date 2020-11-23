@@ -24,3 +24,4 @@
 
 $("#modalEdit").modal();
 $("#modal_editar_cuenta").modal();
+$("#modal_editar_categoria_padre").modal();
