@@ -7,5 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transaccion extends Model
 {
-    use HasFactory;
+    protected $table = 'transaccion';
+    protected $fillable = ['categoria_padre','tipo','descripcion','presupuesto','usuario_id'];
 }
