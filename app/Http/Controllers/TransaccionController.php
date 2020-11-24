@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cuenta;
 use App\Models\Transaccion;
+use App\Models\traslado;
 use Illuminate\Http\Request;
 
 class TransaccionController extends Controller
@@ -103,11 +104,36 @@ class TransaccionController extends Controller
             "detalle" => $request->detalle,
             "categoria" => $request->categoria
         ];
-        $this->actualizar_saldo_cuenta($request->tipo,$request->cuenta,$request->monto);
+        if ($request->tipo == 3) {
+            if ($request->cuenta == $request->cuentaCredito) {
+                session()->flash('iguales', 'No puede hacer un traslado en la misma cuenta');
+            }else{
+   
+                $dataTraslado = [
+                    "cuenta_debito" =>  $request->cuenta,
+                    "monto_debitado" => $request->monto,
+                    "cuenta_credito" => $request->cuentaCredito,
+                    "monto_acreditado" => $request->monto
+                ];
+                $this->traslados($request->cuenta,$request->cuentaCredito,$request->monto);
+                traslado::create($dataTraslado);
+            }
+        }else{
+            
+            $this->actualizar_saldo_cuenta($request->tipo,$request->cuenta,$request->monto);
+        }
         Transaccion::create($dataTransaccion);
         return redirect()->route('transaccion');
     }
-
+    public function traslados($cuentaD,$cuentaC, $monto)
+    {
+        $cuentaDebito = Cuenta::findOrFail($cuentaD);
+        $cuentaCredito = Cuenta::findOrFail($cuentaC);
+        $cuentaDebito->saldo_inicial =  $cuentaDebito->saldo_inicial - $monto;
+        $cuentaCredito->saldo_inicial =  $cuentaCredito->saldo_inicial + $monto;
+        $cuentaDebito->save();
+        $cuentaCredito->save();
+    }
     public function actualizar_saldo_cuenta($tipo, $cuenta, $monto)
     {
         $cuenta = Cuenta::findOrFail($cuenta);

@@ -398,8 +398,14 @@
                             <label class="small mb-1" for="tipo">Seleccione un tipo de transacción</label>
                             <select class="form-control form-control-lg" id="tipo" name="tipo" style="font-size: 15px;">
                             @isset($tipos)
+                            <option  style="font-size: 15px;">Seleccione una</option>
                                 @foreach ($tipos as $tipo)
-                                    <option value="{{$tipo->id}}" style="font-size: 15px;">{{$tipo->tipo}}</option>
+                                    @if($tipo->id == 3)
+                                    <option value="{{$tipo->id}}" id="tipoTransferencia" style="font-size: 15px;">{{$tipo->tipo}}</option>
+                                    @else
+                                    <option value="{{$tipo->id}}" id="tipoOtro" style="font-size: 15px;">{{$tipo->tipo}}</option>
+                                    @endif
+                                    
                                 @endforeach
                             @endisset
                           
@@ -410,6 +416,17 @@
                         <div class="form-group">
                             <label class="small mb-1" for="cuenta">Seleccione una cuenta</label>
                             <select class="form-control form-control-lg" id="cuenta" name="cuenta" style="font-size: 15px;">
+                            @isset($cuentas)
+                                    @foreach ($cuentas as $cuenta)
+                                    <option id="cuentaSeleccion" value="{{$cuenta->id}}" style="font-size: 15px;">{{$cuenta->nombre_corto}}</option>
+                                    @endforeach                           
+                            @endisset
+                            </select>
+                        </div>
+                        <!-- select cuentas credito-->
+                        <div class="form-group" id="divCredito">
+                            <label class="small mb-1" for="cuenta">Seleccione la cuenta a acreditar</label>
+                            <select class="form-control form-control-lg" id="cuentaCredito" name="cuentaCredito" style="font-size: 15px;">
                             @isset($cuentas)
                                     @foreach ($cuentas as $cuenta)
                                     <option value="{{$cuenta->id}}" style="font-size: 15px;">{{$cuenta->nombre_corto}}</option>
@@ -454,7 +471,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn" style="background-color:  #2874a6; color: white;">Registrar</button>
+                    <button type="submit" id="btn-registrar" class="btn" style="background-color:  #2874a6; color: white;">Registrar</button>
                 </div>
             </form>
         </div>

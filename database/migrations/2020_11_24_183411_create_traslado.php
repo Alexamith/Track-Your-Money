@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMoneda extends Migration
+class CreateTraslado extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,13 @@ class CreateMoneda extends Migration
      */
     public function up()
     {
-        Schema::create('moneda', function (Blueprint $table) {
+        Schema::create('traslado', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('nombre_corto');
-            $table->string('simbolo');
-            $table->string('descripcion');
-            $table->double('tasa', 8, 2);
+            $table->integer('cuenta_debito');
+            $table->double('monto_debitado',8,2);
+            $table->integer('cuenta_credito');
+            $table->double('monto_acreditado',8,2);
             $table->timestamps();
-            $table->foreignId('usuario_id');
         });
     }
 
@@ -31,6 +30,6 @@ class CreateMoneda extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('moneda');
+        Schema::dropIfExists('traslado');
     }
 }
