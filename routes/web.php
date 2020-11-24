@@ -63,3 +63,7 @@ Route::post('/actualizarCategoria', [App\Http\Controllers\ControllerCategoria::c
 Route::get('/transacciones', [App\Http\Controllers\TransaccionController::class, 'index'])->name('transaccion');
 Route::post('/transacciones', [App\Http\Controllers\TransaccionController::class, 'store'])->name('crear_transacciones');
 Route::get('/borrarTransaccion/{id}', [App\Http\Controllers\TransaccionController::class, 'destroy'])->name('borrarTransaccion');
+Route::get('/editarTransacciones/{id}', [App\Http\Controllers\TransaccionController::class, 'edit'])->name('editarTransacciones');
+Route::post('/actualizarTransacciones', [App\Http\Controllers\TransaccionController::class, 'update'])->name('actualizarTransacciones');
+
+

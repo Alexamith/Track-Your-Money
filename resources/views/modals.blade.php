@@ -401,7 +401,7 @@
                             <option  style="font-size: 15px;">Seleccione una</option>
                                 @foreach ($tipos as $tipo)
                                     @if($tipo->id == 3)
-                                    <option value="{{$tipo->id}}" id="tipoTransferencia" style="font-size: 15px;">{{$tipo->tipo}}</option>
+                                    <option value="{{$tipo->id}}" id="E" style="font-size: 15px;">{{$tipo->tipo}}</option>
                                     @else
                                     <option value="{{$tipo->id}}" id="tipoOtro" style="font-size: 15px;">{{$tipo->tipo}}</option>
                                     @endif
@@ -477,3 +477,119 @@
         </div>
     </div>
 </div>
+
+@if(session("mensaje") && session("transaccion"))
+<div class="modal fade" id="modal_editar_transaccion" tabindex="-1" role="dialog" aria-labelledby="modal_crear_transaccionTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form method="POST" action="{{ route('actualizarTransacciones') }}">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal_crear_transaccionLongTitle">Editar transacción</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="card-body">
+                        <!-- select tipos-->
+                        <input type="hidden" id="id" name="id" value="{{session('transaccion')->id}}">
+                        <div class="form-group">
+                            <label class="small mb-1" for="tipo">Seleccione un tipo de transacción</label>
+                            <select class="form-control form-control-lg" id="tipo" name="tipo" style="font-size: 15px;">
+                            @isset($tipos)
+                            
+                                @foreach ($tipos as $tipo)
+                                    @if($tipo->id == 3)
+                                   
+                                        @if($tipo->id == session('transaccion')->tipo)
+                                            <option value="{{$tipo->id}}" id="tipoTransferenciaE" selected="selected" style="font-size: 15px;">{{$tipo->tipo}}</option>
+                                        @else
+                                        <option value="{{$tipo->id}}" id="tipoTransferenciaE"  style="font-size: 15px;">{{$tipo->tipo}}</option>
+                                        @endif
+                                    
+                                    @else
+                                        @if($tipo->id == session('transaccion')->tipo)
+                                            <option value="{{$tipo->id}}" id="tipoOtroE" style="font-size: 15px;">{{$tipo->tipo}}</option>
+                                        @endif
+                                    @endif
+                                    
+                                @endforeach
+                            @endisset
+
+                            </select>
+                        </div>
+                        <!-- select cuentas-->
+                        <div class="form-group">
+                            <label class="small mb-1" for="cuenta">Seleccione una cuenta</label>
+                            <select class="form-control form-control-lg" id="cuenta" name="cuenta" style="font-size: 15px;">
+                            @isset($cuentas)
+                                    @foreach ($cuentas as $cuenta)
+                                    @if($cuenta->id == session('transaccion')->cuenta)
+                                    <option id="cuentaSeleccion" selected="selected" value="{{$cuenta->id}}" style="font-size: 15px;">{{$cuenta->nombre_corto}}</option>
+                                    @else
+                                    <option id="cuentaSeleccion"  value="{{$cuenta->id}}" style="font-size: 15px;">{{$cuenta->nombre_corto}}</option>
+                                    @endif
+                                    @endforeach                           
+                            @endisset
+                            </select>
+                        </div>
+                        <!-- select cuentas credito-->
+                        <div class="form-group" id="divCreditoEdit">
+                            <label class="small mb-1" for="cuenta">Seleccione la cuenta a acreditar</label>
+                            <select class="form-control form-control-lg" id="cuentaCredito" name="cuentaCredito" style="font-size: 15px;">
+                            @isset($cuentas)
+                                    @foreach ($cuentas as $cuenta)
+                                    <option value="{{$cuenta->id}}" style="font-size: 15px;">{{$cuenta->nombre_corto}}</option>
+                                    @endforeach                           
+                            @endisset
+                            </select>
+                        </div>
+                         <!-- select categoria-->
+                         <div class="form-group">
+                            <label class="small mb-1" for="categoria">Seleccione una categoria</label>
+                            <select class="form-control form-control-lg" id="categoria" name="categoria" style="font-size: 15px;">
+                            @isset($categorias)
+                                    @foreach ($categorias as $categoria)
+                                        @if($categoria->id == session('transaccion')->categoria)
+                                        <option value="{{$categoria->id}}" selected="selected" style="font-size: 15px;">{{$categoria->categoria_padre}}</option>
+                                        @endif
+                                    <option value="{{$categoria->id}}" style="font-size: 15px;">{{$categoria->categoria_padre}}</option>
+                                    @endforeach                           
+                            @endisset
+                            </select>
+                        </div>
+                        <!--Monto y detalle -->
+                        
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="small mb-1" for="detalle">Detalle</label>
+                                    <input class="form-control py-4 @error('simbolo') is-invalid @enderror" value="{{session('transaccion')->detalle}}" id="detalle" name="detalle" type="text" placeholder="Detalle" required autocomplete="new-detalle" />
+                                    @error('detalle')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="small mb-1" for="monto">Monto</label>
+                                    <input class="form-control py-4"  value="{{session('transaccion')->monto}}" id="monto" name="monto" type="text" required autocomplete="new-monto" placeholder="610.15" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" id="btn-registrar" class="btn" style="background-color:  #2874a6; color: white;">Registrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endif
+

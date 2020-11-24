@@ -24,7 +24,8 @@
 $("#modalEdit").modal();
 $("#modal_editar_cuenta").modal();
 $("#modal_editar_categoria_padre").modal();
-$("#divCredito").hide();
+$("#modal_editar_transaccion").modal();
+$("#divCreditoEdit").hide();
 
 $(document).ready(function() {
     $("#tipoTransferencia").click(function() {
@@ -32,5 +33,11 @@ $(document).ready(function() {
     });
     $("#tipoOtro").click(function() {
         $("#divCredito").hide();
+    });
+    $("#tipoTransferenciaE").click(function() {
+        $("#divCreditoEdit").show();
+    });
+    $("#tipoOtroE").click(function() {
+        $("#divCreditoEdit").hide();
     });
 });

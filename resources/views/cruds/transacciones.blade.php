@@ -72,7 +72,7 @@
                             <td>{{$transaccion->detalle}}</td>
                             <td>{{$transaccion->created_at}}</td>
                             <td>
-                                <a href="" id="" class="btn btn-outline-*" style="border-color: #2874a6 ;">
+                                <a href="{{ url('editarTransacciones/'.$transaccion->id) }}" id="" class="btn btn-outline-*" style="border-color: #2874a6 ;">
                                     <i class="fas fa-edit" style="color: #2874a6 ;"></i>
                                 </a>
                                 <a href="{{ url('borrarTransaccion/'.$transaccion->id) }}" class="btn btn-outline-*" style="border-color: #ff0000 ;">

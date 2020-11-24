@@ -163,9 +163,12 @@ class TransaccionController extends Controller
      * @param  \App\Models\Transaccion  $transaccion
      * @return \Illuminate\Http\Response
      */
-    public function edit(Transaccion $transaccion)
+    public function edit($id)
     {
-        //
+        $transaccion = Transaccion::find($id);
+        return redirect()->route("transaccion")
+            ->with("mensaje", 'dasdadasdasdas')
+            ->with("transaccion", $transaccion);
     }
 
     /**
@@ -175,9 +178,17 @@ class TransaccionController extends Controller
      * @param  \App\Models\Transaccion  $transaccion
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Transaccion $transaccion)
+    public function update(Request $request)
     {
-        //
+        $transaccion = Transaccion::findOrFail($request->id);
+        $transaccion->tipo = $request->tipo;
+        $transaccion->cuenta =  $request->cuenta;
+        $transaccion->monto = $request->monto;
+        $transaccion->detalle = $request->detalle;
+        $transaccion->categoria = $request->categoria;
+        $transaccion->save();
+        return redirect()->route('transaccion');
+
     }
 
     /**
