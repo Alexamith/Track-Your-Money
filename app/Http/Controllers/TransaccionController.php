@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cuenta;
 use App\Models\Transaccion;
 use Illuminate\Http\Request;
 
@@ -102,10 +103,23 @@ class TransaccionController extends Controller
             "detalle" => $request->detalle,
             "categoria" => $request->categoria
         ];
+        $this->actualizar_saldo_cuenta($request->tipo,$request->cuenta,$request->monto);
         Transaccion::create($dataTransaccion);
         return redirect()->route('transaccion');
     }
 
+    public function actualizar_saldo_cuenta($tipo, $cuenta, $monto)
+    {
+        $cuenta = Cuenta::findOrFail($cuenta);
+
+        if ($tipo == 1) {
+            $cuenta->saldo_inicial =  $cuenta->saldo_inicial - $monto;
+        }
+        else if($tipo == 2){
+            $cuenta->saldo_inicial =  $cuenta->saldo_inicial + $monto;
+        }
+        $cuenta->save();
+    }
     /**
      * Display the specified resource.
      *
