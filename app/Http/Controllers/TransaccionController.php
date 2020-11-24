@@ -24,6 +24,47 @@ class TransaccionController extends Controller
     public function index()
     {
         $usuario = \Auth::user()->id;
+       
+        $transacciones = $this->obtener_transacciones($usuario);
+        $tipos = $this->obtener_tipos_de_transaccion();
+        $categorias = $this->obtener_categorias($usuario);
+        $cuentas = $this->obtener_cuentas($usuario);
+
+        if (count($transacciones) != 0) {
+            foreach ($transacciones as $value) {
+                if ($value->tipo_transaccion == 1) {
+                    $value->monto =  $value->monto - ($value->monto * 2);
+                }
+                $value->monto = number_format($value->monto, 2);            
+            }
+            return view('cruds.transacciones', ['transacciones' => $transacciones, 'tipos' => $tipos, 'categorias'=>$categorias, 'cuentas'=>$cuentas]);
+        } else {
+            return view('cruds.transacciones', ['tipos' => $tipos, 'categorias'=>$categorias, 'cuentas'=>$cuentas]);
+        }
+    }
+    
+    public function obtener_categorias($usuario)
+    {
+        $categorias = \DB::select("select c.id,c.categoria_padre, tp.tipo, c.descripcion,c.presupuesto
+        from categoria as c
+        join tipo_categoria as tp
+        on c.tipo = tp.id
+        and usuario_id =".$usuario);
+        return $categorias;
+    }
+    public function obtener_cuentas($usuario)
+    {
+        $cuentas = \DB::select("select * from cuenta where usuario_id =".$usuario);
+        return $cuentas;
+    }
+    public function obtener_tipos_de_transaccion()
+    {
+        $tipos = \DB::select("select * from tipo_transaccion");
+        return $tipos;
+    }
+
+    public function obtener_transacciones($usuario)
+    {
         $sql = "select t.id,t.tipo as tipo_transaccion, tp.tipo, c.nombre_corto as nombre, concat(m.nombre_corto,' ',m.simbolo) as Moneda, m.tasa, t.monto, t.detalle, t.created_at
         from transaccion as t
         join tipo_transaccion as tp
@@ -34,20 +75,8 @@ class TransaccionController extends Controller
         on c.moneda = m.id
         and c.usuario_id =" . $usuario;
         $transacciones = \DB::select($sql);
-        $tipos = \DB::select("select * from tipo_transaccion");
-        if (count($transacciones) != 0) {
-            foreach ($transacciones as $value) {
-                if ($value->tipo_transaccion == 1) {
-                    $value->monto =  $value->monto - ($value->monto * 2);
-                }
-                $value->monto = number_format($value->monto, 2);            
-            }
-            return view('cruds.transacciones', ['transacciones' => $transacciones, 'tipos' => $tipos]);
-        } else {
-            return view('cruds.transacciones', ['tipos' => $tipos]);
-        }
+        return $transacciones;
     }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -66,7 +95,15 @@ class TransaccionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $dataTransaccion = [
+            "tipo" => $request->tipo,
+            "cuenta" => $request->cuenta,
+            "monto" => $request->monto,
+            "detalle" => $request->detalle,
+            "categoria" => $request->categoria
+        ];
+        Transaccion::create($dataTransaccion);
+        return redirect()->route('transaccion');
     }
 
     /**
@@ -109,8 +146,10 @@ class TransaccionController extends Controller
      * @param  \App\Models\Transaccion  $transaccion
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Transaccion $transaccion)
+    public function destroy($id)
     {
-        //
+        $transaccion = Transaccion::find($id);
+        $transaccion->delete();
+        return redirect()->route('transaccion');
     }
 }

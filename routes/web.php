@@ -39,7 +39,7 @@ Route::post('/update', [App\Http\Controllers\MonedaController::class, 'update'])
 Route::get('/deleteCoins/{id}', [App\Http\Controllers\MonedaController::class, 'destroy'])->name('deleteCoins');
 
 
-Route::get('/transacciones', [App\Http\Controllers\TransaccionController::class, 'index'])->name('transaccion');
+
 
 
 
@@ -57,3 +57,9 @@ Route::post('/categorias', [App\Http\Controllers\ControllerCategoria::class, 'st
 Route::get('/borrarCategoria/{id}', [App\Http\Controllers\ControllerCategoria::class, 'destroy'])->name('borrarCategoria');
 Route::get('/editarCategoria/{id}', [App\Http\Controllers\ControllerCategoria::class, 'edit'])->name('editarCategoria');
 Route::post('/actualizarCategoria', [App\Http\Controllers\ControllerCategoria::class, 'update'])->name('actualizarCategoria');
+
+
+// rutas transaccion
+Route::get('/transacciones', [App\Http\Controllers\TransaccionController::class, 'index'])->name('transaccion');
+Route::post('/transacciones', [App\Http\Controllers\TransaccionController::class, 'store'])->name('crear_transacciones');
+Route::get('/borrarTransaccion/{id}', [App\Http\Controllers\TransaccionController::class, 'destroy'])->name('borrarTransaccion');

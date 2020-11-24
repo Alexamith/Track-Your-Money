@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Transaccion extends Model
 {
     protected $table = 'transaccion';
-    protected $fillable = ['categoria_padre','tipo','descripcion','presupuesto','usuario_id'];
+    protected $fillable = ['tipo','cuenta','monto','detalle','categoria'];
 }

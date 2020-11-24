@@ -141,12 +141,12 @@
                             <!-- select -->
                             <div class="form-group">
                                 <label class="small mb-1" for="moneda">Seleccione una moneda</label>
-                                <select class="form-control form-control-lg"id="moneda" name ="moneda" style="font-size: 15px;">
-                                @isset($monedas)
+                                <select class="form-control form-control-lg" id="moneda" name="moneda" style="font-size: 15px;">
+                                    @isset($monedas)
                                     @foreach ($monedas as $moneda)
-                                    <option value="{{$moneda->id}}" style="font-size: 15px;" >{{$moneda->nombre_corto}}</option>
+                                    <option value="{{$moneda->id}}" style="font-size: 15px;">{{$moneda->nombre_corto}}</option>
                                     @endforeach
-                                @endisset
+                                    @endisset
 
                                 </select>
                             </div>
@@ -203,18 +203,18 @@
                             <!-- select -->
                             <div class="form-group">
                                 <label class="small mb-1" for="moneda">Seleccione una moneda</label>
-                                <select class="form-control form-control-lg"id="moneda" name ="moneda" style="font-size: 15px;">
-                                @isset($monedas)
+                                <select class="form-control form-control-lg" id="moneda" name="moneda" style="font-size: 15px;">
+                                    @isset($monedas)
                                     @foreach ($monedas as $moneda)
-           
+
                                     @if($moneda->id == session('cuenta')->moneda)
                                     <option value="{{$moneda->id}}" style="font-size: 15px;" selected="selected">{{$moneda->nombre_corto}}</option>
                                     @else
                                     <option value="{{$moneda->id}}" style="font-size: 15px;">{{$moneda->nombre_corto}}</option>
                                     @endif
-                                    
+
                                     @endforeach
-                                @endisset
+                                    @endisset
 
                                 </select>
                             </div>
@@ -270,12 +270,12 @@
                             <!-- select -->
                             <div class="form-group">
                                 <label class="small mb-1" for="moneda">Seleccione un tipo de categoría</label>
-                                <select class="form-control form-control-lg"id="tipo" name ="tipo" style="font-size: 15px;">
-                                @isset($tipos)
+                                <select class="form-control form-control-lg" id="tipo" name="tipo" style="font-size: 15px;">
+                                    @isset($tipos)
                                     @foreach ($tipos as $tipo)
-                                    <option value="{{$tipo->id}}" style="font-size: 15px;" >{{$tipo->tipo}}</option>
+                                    <option value="{{$tipo->id}}" style="font-size: 15px;">{{$tipo->tipo}}</option>
                                     @endforeach
-                                @endisset
+                                    @endisset
 
                                 </select>
                             </div>
@@ -332,17 +332,17 @@
                             <!-- select -->
                             <div class="form-group">
                                 <label class="small mb-1" for="moneda">Seleccione un tipo de categoría</label>
-                                <select class="form-control form-control-lg"id="tipo" name ="tipo" style="font-size: 15px;">
-                                @isset($tipos)
+                                <select class="form-control form-control-lg" id="tipo" name="tipo" style="font-size: 15px;">
+                                    @isset($tipos)
                                     @foreach ($tipos as $tipo)
-                                        @if($tipo->id == session('categoria')->tipo)
-                                        <option value="{{$tipo->id}}" style="font-size: 15px;"  selected="selected">{{$tipo->tipo}}</option>
-                                        @else
-                                        <option value="{{$tipo->id}}" style="font-size: 15px;">{{$tipo->tipo}}</option>
-                                        @endif
-                                        
+                                    @if($tipo->id == session('categoria')->tipo)
+                                    <option value="{{$tipo->id}}" style="font-size: 15px;" selected="selected">{{$tipo->tipo}}</option>
+                                    @else
+                                    <option value="{{$tipo->id}}" style="font-size: 15px;">{{$tipo->tipo}}</option>
+                                    @endif
+
                                     @endforeach
-                                @endisset
+                                    @endisset
 
                                 </select>
                             </div>
@@ -378,3 +378,85 @@
     </div>
 </div>
 @endif
+
+<!-- Modal crear transaccion-->
+<div class="modal fade" id="modal_crear_transaccion" tabindex="-1" role="dialog" aria-labelledby="modal_crear_transaccionTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form method="POST" action="{{ route('crear_transacciones') }}">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal_crear_transaccionLongTitle">Crear transacción</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="card-body">
+                        <!-- select tipos-->
+                        <div class="form-group">
+                            <label class="small mb-1" for="tipo">Seleccione un tipo de transacción</label>
+                            <select class="form-control form-control-lg" id="tipo" name="tipo" style="font-size: 15px;">
+                            @isset($tipos)
+                                @foreach ($tipos as $tipo)
+                                    <option value="{{$tipo->id}}" style="font-size: 15px;">{{$tipo->tipo}}</option>
+                                @endforeach
+                            @endisset
+                          
+
+                            </select>
+                        </div>
+                        <!-- select cuentas-->
+                        <div class="form-group">
+                            <label class="small mb-1" for="cuenta">Seleccione una cuenta</label>
+                            <select class="form-control form-control-lg" id="cuenta" name="cuenta" style="font-size: 15px;">
+                            @isset($cuentas)
+                                    @foreach ($cuentas as $cuenta)
+                                    <option value="{{$cuenta->id}}" style="font-size: 15px;">{{$cuenta->nombre_corto}}</option>
+                                    @endforeach                           
+                            @endisset
+                            </select>
+                        </div>
+                         <!-- select categoria-->
+                         <div class="form-group">
+                            <label class="small mb-1" for="categoria">Seleccione una categoria</label>
+                            <select class="form-control form-control-lg" id="categoria" name="categoria" style="font-size: 15px;">
+                            @isset($categorias)
+                                    @foreach ($categorias as $categoria)
+                                    <option value="{{$categoria->id}}" style="font-size: 15px;">{{$categoria->categoria_padre}}</option>
+                                    @endforeach                           
+                            @endisset
+                            </select>
+                        </div>
+                        <!--Monto y detalle -->
+                        
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="small mb-1" for="detalle">Detalle</label>
+                                    <input class="form-control py-4 @error('simbolo') is-invalid @enderror" id="detalle" name="detalle" type="text" placeholder="Detalle" required autocomplete="new-detalle" />
+                                    @error('detalle')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="small mb-1" for="monto">Monto</label>
+                                    <input class="form-control py-4" id="monto" name="monto" type="text" required autocomplete="new-monto" placeholder="610.15" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn" style="background-color:  #2874a6; color: white;">Registrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
