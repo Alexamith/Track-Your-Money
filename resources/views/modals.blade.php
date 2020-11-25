@@ -118,7 +118,12 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <center><label class="small mb-1" for="inputConfirmPassword">Moneda nacional</label></center>
+                                    @if(session('tipo')->nacional == 1)
+                                    <input class="form-control py-4" type="checkbox" id="nacional" name="nacional" checked>
+                                    @else
                                     <input class="form-control py-4" type="checkbox" id="nacional" name="nacional">
+                                    @endif
+                                    
 
                                 </div>
                             </div>

@@ -20,7 +20,11 @@
     <div class="card mb-4">
         <div class="card-header">
             <i class="fas fa-table mr-1"></i>
-            <strong>Mis Monedas</strong>
+            <strong>Mis Monedas</strong> 
+            @if(session("mensaje") && session("local"))
+             <p style="color: red;">{{session("local")}}</p>
+            @endif
+
         </div>
         <div class="card-body">
             <div class="table-responsive">

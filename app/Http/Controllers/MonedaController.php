@@ -99,15 +99,24 @@ class MonedaController extends Controller
      */
     public function update(Request $request)
     {
-        // dd($request->nacional);
-        $Moneda = Moneda::findOrFail($request->id);
-        $Moneda->nombre_corto = $request->name;
-        $Moneda->simbolo =  $request->simbolo;
-        $Moneda->descripcion = $request->descripcion;
-        $Moneda->tasa = $request->tasa_cambio;
-        $Moneda->nacional = $request->nacional;
-        $Moneda->save();
-        return redirect('/monedas');
+        if ($this->buscar_moneda_local() == 1 and $request->nacional == true) {
+            return redirect()->route("moneda")
+            ->with("mensaje", 'faafafqwwq')
+            ->with("local",'Ya cuenta con una moneda local');
+            
+        }else {
+            $Moneda = Moneda::findOrFail($request->id);
+            $Moneda->nombre_corto = $request->name;
+            $Moneda->simbolo =  $request->simbolo;
+            $Moneda->descripcion = $request->descripcion;
+            $Moneda->tasa = $request->tasa_cambio;
+            $Moneda->nacional = $request->nacional;
+            $Moneda->save();
+            return redirect('/monedas');
+            
+            
+        }
+
     }
 
     /**
@@ -121,5 +130,18 @@ class MonedaController extends Controller
         $moneda = Moneda::find($id);
         $moneda->delete();
         return redirect('/monedas');
+    }
+    public function buscar_moneda_local()
+    {
+        $usuario = \Auth::user()->id;
+        $monedas = \DB::select("select * from moneda where usuario_id =".$usuario);
+        if (!empty($monedas)) {
+            foreach ($monedas as $key) {
+                if ($key->nacional == 1) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
