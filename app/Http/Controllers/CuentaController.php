@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cuenta;
+use App\Models\Cuentas_compartidas;
 use Illuminate\Http\Request;
 
 class CuentaController extends Controller
@@ -32,6 +33,7 @@ class CuentaController extends Controller
         and m.usuario_id =".$usuario;
         $cuentas = \DB::select($sql);
         $monedas = \DB::select("select id,concat(nombre_corto,' ',simbolo) as nombre_corto from moneda where usuario_id =".$usuario);
+        
         if (count($cuentas) != 0) {
             foreach ($cuentas as $key) {
                 $key->saldo_inicial = number_format($key->saldo_inicial,2);
@@ -95,6 +97,28 @@ class CuentaController extends Controller
         return redirect()->route("cuenta")
             ->with("mensaje", 'dasdadasdasdas')
             ->with("cuenta", $cuenta);
+    }
+    public function compartir($id)
+    {
+        $cuenta = Cuenta::find($id);
+        return redirect()->route("cuenta")
+            ->with("mensaje", 'dasdadasdasdas')
+            ->with("compartir", $cuenta);
+    }
+    public function compartirCuenta(Request $request ){
+        $registrada = \DB::select("select * from cuentas_compartidas where cuenta_id =".$request->cuenta_id." and usuario_a_compartir_id =".$request->usuario_id);
+        if (empty($registrada)) {
+            $dataCuentaCompartir = [
+                "cuenta_id" => $request->cuenta_id,
+                "usuario_a_compartir_id" => $request->usuario_id
+            ];
+           Cuentas_compartidas::create($dataCuentaCompartir);
+            return \Response::json('La cuenta se compartió con éxito');
+        }else{
+            return \Response::json('Esta cuenta ya está compartida con este usuario');
+        }
+        
+        
     }
 
     /**

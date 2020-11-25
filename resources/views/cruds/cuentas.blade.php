@@ -67,9 +67,10 @@
                                 <a href="{{ url('borrarCuenta/'.$cuenta->id) }}" class="btn btn-outline-*" style="border-color: #ff0000 ;">
                                     <i class="fas fa-trash-alt" style="color: #ff0000 ;"></i>
                                 </a>
-                                <a href="{{ url('borrarCuenta/'.$cuenta->id) }}" class="btn btn-outline-*" style="border-color: #2874a6 ;">
+                                <a href="{{ url('compartir/'.$cuenta->id) }}" class="btn btn-outline-*" style="border-color: #2874a6;"> 
                                     <i class="fas fa-share-alt-square" style="color: #2874a6 ;"></i>
-                                </a></td>
+                                </a>
+                                </td>
                         </tr>
                         @endforeach
                     </tbody>

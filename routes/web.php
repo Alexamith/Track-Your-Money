@@ -48,6 +48,8 @@ Route::get('/cuentas', [App\Http\Controllers\CuentaController::class, 'index'])-
 Route::post('/cuentas', [App\Http\Controllers\CuentaController::class, 'store'])->name('registra_cuenta');
 Route::get('/borrarCuenta/{id}', [App\Http\Controllers\CuentaController::class, 'destroy'])->name('borrarCuenta');
 Route::get('/editarCuenta/{id}', [App\Http\Controllers\CuentaController::class, 'edit'])->name('editarCuenta');
+Route::get('/compartir/{id}', [App\Http\Controllers\CuentaController::class, 'compartir'])->name('compartir');
+Route::post('/compartir', [App\Http\Controllers\CuentaController::class, 'compartirCuenta'])->name('compartirCuenta');
 Route::post('/actualizarCuenta', [App\Http\Controllers\CuentaController::class, 'update'])->name('actualizarCuenta');
 
 
@@ -67,3 +69,9 @@ Route::get('/editarTransacciones/{id}', [App\Http\Controllers\TransaccionControl
 Route::post('/actualizarTransacciones', [App\Http\Controllers\TransaccionController::class, 'update'])->name('actualizarTransacciones');
 
 
+Route::get('/usuario', function () {
+    $correo = $_REQUEST['correo'];
+    $users = \DB::select("select * from users where email= "."'".$correo."'");
+    
+    return \Response::json($users);
+});

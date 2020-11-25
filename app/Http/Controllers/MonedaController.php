@@ -57,7 +57,8 @@ class MonedaController extends Controller
             "simbolo" => $request->simbolo,
             "descripcion" => $request->descripcion,
             "tasa" => $request->tasa_cambio,
-            "usuario_id" => \Auth::user()->id
+            "usuario_id" => \Auth::user()->id,
+            "nacional" => $request->nacional
         ];
         Moneda::create($dataMoneda);
         return redirect()->route('moneda');
@@ -98,11 +99,13 @@ class MonedaController extends Controller
      */
     public function update(Request $request)
     {
+        // dd($request->nacional);
         $Moneda = Moneda::findOrFail($request->id);
         $Moneda->nombre_corto = $request->name;
         $Moneda->simbolo =  $request->simbolo;
         $Moneda->descripcion = $request->descripcion;
         $Moneda->tasa = $request->tasa_cambio;
+        $Moneda->nacional = $request->nacional;
         $Moneda->save();
         return redirect('/monedas');
     }

@@ -32,6 +32,7 @@
                             <th>Descripción</th>
                             <th>Tasa</th>
                             <th>Fecha de creación</th>
+                            <th>Adicional</th>
                             <th><a href="#" class="btn btn-outline-*" style="border-color: #2874a6;" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-plus-square" style="color: #2874a6 ;"></i></a></th>
                         </tr>
                     </thead>
@@ -42,6 +43,7 @@
                             <th>Descripción</th>
                             <th>Tasa</th>
                             <th>Fecha de creación</th>
+                            <th>Adicional</th>
                             <th>Opciones</th>
                         </tr>
                     </tfoot>
@@ -54,6 +56,11 @@
                             <td>{{$moneda->descripcion}}</td>
                             <td>{{$moneda->tasa}}</td>
                             <td>{{$moneda->created_at}}</td>
+                            @if($moneda->nacional == 1)
+                            <td>Moneda local</td>
+                            @else
+                            <td>Moneda adicional</td>
+                            @endif
                             <td>
                                 <a href="{{ url('editMoneda/'.$moneda->id) }}" id="btn-edit" class="btn btn-outline-*" style="border-color: #2874a6 ;">
                                     <i class="fas fa-edit" style="color: #2874a6 ;"></i>
