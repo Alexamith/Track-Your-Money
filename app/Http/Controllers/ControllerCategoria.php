@@ -134,6 +134,14 @@ class ControllerCategoria extends Controller
             ->with("mensaje", 'dasdadasdasdas')
             ->with("categoria", $categoria);
     }
+    public function editSub($id)
+    {
+        $subcategoria = \DB::select("select * from subcategoria where id =".$id);
+   
+        return redirect()->route("subcategoria")
+            ->with("mensaje", 'dasdadasdasdas')
+            ->with("subcategoriaEdit", $subcategoria[0]);
+    }
 
     /**
      * Update the specified resource in storage.

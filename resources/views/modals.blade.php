@@ -123,7 +123,7 @@
                                     @else
                                     <input class="form-control py-4" type="checkbox" id="nacional" name="nacional">
                                     @endif
-                                    
+
 
                                 </div>
                             </div>
@@ -708,3 +708,74 @@
         </div>
     </div>
 </div>
+
+@if(session("mensaje") && session("subcategoriaEdit"))
+<!-- Modal editar Subcategorias-->
+<div class="modal fade" id="modal_editar_sub" tabindex="-1" role="dialog" aria-labelledby="modal_editar_subTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form method="POST" action="{{ route('actualizarSubCategoria') }}">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Editar Subcategorias</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="card-body">
+                        <div class="form-group">
+
+                            <!-- select -->
+                            {{session('subcategoriaEdit')->id}}
+                            <div class="form-group">
+                                <label class="small mb-1" for="categoria">Seleccione la categoría padre</label>
+                                
+                                <select class="form-control form-control-lg" id="categoria" name="categoria" style="font-size: 15px;">
+                              
+                                    @isset($cate)
+                                    @foreach ($cate as $cat)
+                                        {{$cat->id}}
+                                        @if(session('subcategoriaEdit')->categoria_id == $cat->id)
+                                        <option value="{{$cat->id}}" style="font-size: 15px;" selected="selected">{{$cat->categoria_padre}}</option>
+                                        @else
+                                        <option value="{{$cat->id}}" style="font-size: 15px;">{{$cat->categoria_padre}}</option>
+                                        @endif
+                                    @endforeach
+                                    @endisset
+
+                                   
+                                </select>
+                            </div>
+                            <!-- Nombre -->
+                            <div class="form-group">
+                                <label class="small mb-1" for="inputFirstName">Nombre</label>
+                                <input class="form-control py-4" id="name" name="name" type="text" placeholder="Nombre" />
+                                @error('name')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <!-- Descripcion -->
+                        <div class="form-group">
+                            <label class="small mb-1" for="inputEmailAddress">Descripción</label>
+                            <input class="form-control py-4 @error('descripcion') is-invalid @enderror" value="{{ old('descripcion') }}" required autocomplete="descripcion" id="descripcion" name="descripcion" type="descripcion" aria-describedby="descripcionHelp" placeholder="Descripcion" />
+                        </div>
+                        <!-- presupuesto -->
+                        <div class="form-group">
+                            <label class="small mb-1" for="saldo">Presupuesto</label>
+                            <input class="form-control py-4 @error('saldo') is-invalid @enderror" value="{{ old('presupuesto') }}" required autocomplete="presupuesto" id="presupuesto" name="presupuesto" type="text" aria-describedby="presupuestoHelp" placeholder="Presupuesto" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn" style="background-color:  #2874a6; color: white;">Registrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endif

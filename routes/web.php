@@ -61,7 +61,9 @@ Route::post('/subcategoria', [App\Http\Controllers\ControllerCategoria::class, '
 Route::get('/borrarCategoria/{id}', [App\Http\Controllers\ControllerCategoria::class, 'destroy'])->name('borrarCategoria');
 Route::get('/borrarSubCategoria/{id}', [App\Http\Controllers\ControllerCategoria::class, 'destroySub'])->name('borrarSubCategoria');
 Route::get('/editarCategoria/{id}', [App\Http\Controllers\ControllerCategoria::class, 'edit'])->name('editarCategoria');
+Route::get('/editarSubCategoria/{id}', [App\Http\Controllers\ControllerCategoria::class, 'editSub'])->name('editarSubCategoria');
 Route::post('/actualizarCategoria', [App\Http\Controllers\ControllerCategoria::class, 'update'])->name('actualizarCategoria');
+Route::post('/actualizarSubCategoria', [App\Http\Controllers\ControllerCategoria::class, 'updateSub'])->name('actualizarSubCategoria');
 
 
 // rutas transaccion

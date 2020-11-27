@@ -26,6 +26,7 @@ $("#modal_editar_cuenta").modal();
 $("#modal_editar_categoria_padre").modal();
 $("#modal_editar_transaccion").modal();
 $("#compartirCuenta").modal();
+$("#modal_editar_sub").modal();
 $("#divCreditoEdit").hide();
 
 $(document).ready(function() {
