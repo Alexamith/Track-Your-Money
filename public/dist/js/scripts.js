@@ -28,6 +28,7 @@ $("#modal_editar_transaccion").modal();
 $("#compartirCuenta").modal();
 $("#modal_editar_sub").modal();
 $("#divCreditoEdit").hide();
+$("#divCredito").hide();
 
 $(document).ready(function() {
     $("#tipoTransferencia").click(function() {
@@ -41,6 +42,15 @@ $(document).ready(function() {
     });
     $("#tipoOtroE").click(function() {
         $("#divCreditoEdit").hide();
+    });
+    $("#traslado").click(function() {
+        var trasladoCheck = $('#traslado').is(":checked");
+        if (trasladoCheck) {
+            $("#divCredito").show(); 
+        }else{
+            $("#divCredito").hide();
+        }
+        
     });
     //----- Open model CREATE -----//
 

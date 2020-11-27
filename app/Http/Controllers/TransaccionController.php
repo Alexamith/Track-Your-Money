@@ -25,8 +25,7 @@ class TransaccionController extends Controller
      */
     public function index()
     {
-        $usuario = \Auth::user()->id;
-       
+        $usuario = \Auth::user()->id; 
         $transacciones = $this->obtener_transacciones($usuario);
         $tipos = $this->obtener_tipos_de_transaccion();
         $categorias = $this->obtener_categorias($usuario);
@@ -34,7 +33,7 @@ class TransaccionController extends Controller
 
         if (count($transacciones) != 0) {
             foreach ($transacciones as $value) {
-                if ($value->tipo_transaccion == 1) {
+                if ($value->tipo == 'Gastos') {
                     $value->monto =  $value->monto - ($value->monto * 2);
                 }
                 $value->monto = number_format($value->monto, 2);            
@@ -67,12 +66,15 @@ class TransaccionController extends Controller
 
     public function obtener_transacciones($usuario)
     {
-        $sql = "select t.id,t.tipo as tipo_transaccion, tp.tipo, c.nombre_corto as nombre, concat(m.nombre_corto,' ',m.simbolo) as Moneda, m.tasa, t.monto, t.detalle, t.created_at
+        $sql = "select t.id,tc.tipo as tipo, c.nombre_corto as nombre, concat(m.nombre_corto,' ',m.simbolo) as Moneda,
+        m.tasa, t.monto, t.detalle, t.created_at
         from transaccion as t
-        join tipo_transaccion as tp
-        on t.tipo = tp.id
         join cuenta as c
         on t.cuenta = c.id
+        join categoria as ca
+        on t.categoria = ca.id
+        join tipo_categoria as tc
+        on ca.tipo = tc.id
         join moneda as m
         on c.moneda = m.id
         and c.usuario_id =" . $usuario;
@@ -97,14 +99,21 @@ class TransaccionController extends Controller
      */
     public function store(Request $request)
     {
+        $tralado =  $request->traslado;
+
         $dataTransaccion = [
-            "tipo" => $request->tipo,
+            "categoria" => $request->categoria,
             "cuenta" => $request->cuenta,
             "monto" => $request->monto,
             "detalle" => $request->detalle,
-            "categoria" => $request->categoria
+            
         ];
-        if ($request->tipo == 3) {
+        $tipocategoria = \DB::select("select tp.id from categoria as c
+        join tipo_categoria as tp
+        on c.tipo = tp.id
+        and c.id =".$request->categoria);
+  
+        if ($tipocategoria[0]->id == 3) {
             if ($request->cuenta == $request->cuentaCredito) {
                 session()->flash('iguales', 'No puede hacer un traslado en la misma cuenta');
             }else{
@@ -120,7 +129,7 @@ class TransaccionController extends Controller
             }
         }else{
             
-            $this->actualizar_saldo_cuenta($request->tipo,$request->cuenta,$request->monto);
+            $this->actualizar_saldo_cuenta($tipocategoria[0]->id,$request->cuenta,$request->monto);
         }
         Transaccion::create($dataTransaccion);
         return redirect()->route('transaccion');
@@ -180,8 +189,8 @@ class TransaccionController extends Controller
      */
     public function update(Request $request)
     {
+
         $transaccion = Transaccion::findOrFail($request->id);
-        $transaccion->tipo = $request->tipo;
         $transaccion->cuenta =  $request->cuenta;
         $transaccion->monto = $request->monto;
         $transaccion->detalle = $request->detalle;

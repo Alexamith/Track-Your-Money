@@ -412,47 +412,6 @@
                 </div>
                 <div class="modal-body">
                     <div class="card-body">
-                        <!-- select tipos-->
-                        <div class="form-group">
-                            <label class="small mb-1" for="tipo">Seleccione un tipo de transacción</label>
-                            <select class="form-control form-control-lg" id="tipo" name="tipo" style="font-size: 15px;">
-                                @isset($tipos)
-                                <option style="font-size: 15px;">Seleccione una</option>
-                                @foreach ($tipos as $tipo)
-                                @if($tipo->id == 3)
-                                <option value="{{$tipo->id}}" id="E" style="font-size: 15px;">{{$tipo->tipo}}</option>
-                                @else
-                                <option value="{{$tipo->id}}" id="tipoOtro" style="font-size: 15px;">{{$tipo->tipo}}</option>
-                                @endif
-
-                                @endforeach
-                                @endisset
-
-
-                            </select>
-                        </div>
-                        <!-- select cuentas-->
-                        <div class="form-group">
-                            <label class="small mb-1" for="cuenta">Seleccione una cuenta</label>
-                            <select class="form-control form-control-lg" id="cuenta" name="cuenta" style="font-size: 15px;">
-                                @isset($cuentas)
-                                @foreach ($cuentas as $cuenta)
-                                <option id="cuentaSeleccion" value="{{$cuenta->id}}" style="font-size: 15px;">{{$cuenta->nombre_corto}}</option>
-                                @endforeach
-                                @endisset
-                            </select>
-                        </div>
-                        <!-- select cuentas credito-->
-                        <div class="form-group" id="divCredito">
-                            <label class="small mb-1" for="cuenta">Seleccione la cuenta a acreditar</label>
-                            <select class="form-control form-control-lg" id="cuentaCredito" name="cuentaCredito" style="font-size: 15px;">
-                                @isset($cuentas)
-                                @foreach ($cuentas as $cuenta)
-                                <option value="{{$cuenta->id}}" style="font-size: 15px;">{{$cuenta->nombre_corto}}</option>
-                                @endforeach
-                                @endisset
-                            </select>
-                        </div>
                         <!-- select categoria-->
                         <div class="form-group">
                             <label class="small mb-1" for="categoria">Seleccione una categoria</label>
@@ -464,6 +423,39 @@
                                 @endisset
                             </select>
                         </div>
+                        <!-- select cuenta debito-->
+                        <div class="form-row">
+                            <div class="col-md-10">
+                                <div class="form-group">
+                                    <label class="small mb-1" for="cuenta">Cuenta a debitar</label>
+                                    <select class="form-control form-control-lg" id="cuenta" name="cuenta" style="font-size: 15px;">
+                                        @isset($cuentas)
+                                        @foreach ($cuentas as $cuenta)
+                                        <option id="cuentaSeleccion" value="{{$cuenta->id}}" style="font-size: 15px;">{{$cuenta->nombre_corto}}</option>
+                                        @endforeach
+                                        @endisset
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <center> <label class="small" for="detalle">Traslado</label></center>
+                                    <input class="form-control py-4" type="checkbox" id="traslado" name="traslado">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- select cuentas credito-->
+                        <div class="form-group" id="divCredito">
+                            <label class="small mb-1" for="cuenta">Cuenta acreditar</label>
+                            <select class="form-control form-control-lg" id="cuentaCredito" name="cuentaCredito" style="font-size: 15px;">
+                                @isset($cuentas)
+                                @foreach ($cuentas as $cuenta)
+                                <option value="{{$cuenta->id}}" style="font-size: 15px;">{{$cuenta->nombre_corto}}</option>
+                                @endforeach
+                                @endisset
+                            </select>
+                        </div>
+
                         <!--Monto y detalle -->
 
                         <div class="form-row">
@@ -503,6 +495,7 @@
         <div class="modal-content">
             <form method="POST" action="{{ route('actualizarTransacciones') }}">
                 @csrf
+                <input type="hidden" id="id" name="id" value="{{session('transaccion')->id}}">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modal_crear_transaccionLongTitle">Editar transacción</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -512,7 +505,7 @@
                 <div class="modal-body">
                     <div class="card-body">
                         <!-- select tipos-->
-                        <input type="hidden" id="id" name="id" value="{{session('transaccion')->id}}">
+                        <!-- <input type="hidden" id="id" name="id" value="{{session('transaccion')->id}}">
                         <div class="form-group">
                             <label class="small mb-1" for="tipo">Seleccione un tipo de transacción</label>
                             <select class="form-control form-control-lg" id="tipo" name="tipo" style="font-size: 15px;">
@@ -537,7 +530,7 @@
                                 @endisset
 
                             </select>
-                        </div>
+                        </div> -->
                         <!-- select cuentas-->
                         <div class="form-group">
                             <label class="small mb-1" for="cuenta">Seleccione una cuenta</label>
@@ -572,8 +565,11 @@
                                 @foreach ($categorias as $categoria)
                                 @if($categoria->id == session('transaccion')->categoria)
                                 <option value="{{$categoria->id}}" selected="selected" style="font-size: 15px;">{{$categoria->categoria_padre}}</option>
-                                @endif
+                                @else{
                                 <option value="{{$categoria->id}}" style="font-size: 15px;">{{$categoria->categoria_padre}}</option>
+
+                                }
+                                @endif
                                 @endforeach
                                 @endisset
                             </select>
@@ -731,27 +727,27 @@
 
                             <div class="form-group">
                                 <label class="small mb-1" for="categoria">Seleccione la categoría padre</label>
-                                
+
                                 <select class="form-control form-control-lg" id="categoria" name="categoria" style="font-size: 15px;">
-                              
+
                                     @isset($cate)
                                     @foreach ($cate as $cat)
-                                        {{$cat->id}}
-                                        @if(session('subcategoriaEdit')->categoria_id == $cat->id)
-                                        <option value="{{$cat->id}}" style="font-size: 15px;" selected="selected">{{$cat->categoria_padre}}</option>
-                                        @else
-                                        <option value="{{$cat->id}}" style="font-size: 15px;">{{$cat->categoria_padre}}</option>
-                                        @endif
+                                    {{$cat->id}}
+                                    @if(session('subcategoriaEdit')->categoria_id == $cat->id)
+                                    <option value="{{$cat->id}}" style="font-size: 15px;" selected="selected">{{$cat->categoria_padre}}</option>
+                                    @else
+                                    <option value="{{$cat->id}}" style="font-size: 15px;">{{$cat->categoria_padre}}</option>
+                                    @endif
                                     @endforeach
                                     @endisset
 
-                                   
+
                                 </select>
                             </div>
                             <!-- Nombre -->
                             <div class="form-group">
                                 <label class="small mb-1" for="inputFirstName">Nombre</label>
-                                <input class="form-control py-4" id="name" name="name" type="text"  value="{{session('subcategoriaEdit')->nombre}}" placeholder="Nombre" />
+                                <input class="form-control py-4" id="name" name="name" type="text" value="{{session('subcategoriaEdit')->nombre}}" placeholder="Nombre" />
                                 @error('name')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
