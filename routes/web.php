@@ -55,8 +55,11 @@ Route::post('/actualizarCuenta', [App\Http\Controllers\CuentaController::class, 
 
 // Rutas categorias
 Route::get('/categorias', [App\Http\Controllers\ControllerCategoria::class, 'index'])->name('categoria');
+Route::get('/subcategoria', [App\Http\Controllers\ControllerCategoria::class, 'subcategoria'])->name('subcategoria');
 Route::post('/categorias', [App\Http\Controllers\ControllerCategoria::class, 'store'])->name('crear_categoria');
+Route::post('/subcategoria', [App\Http\Controllers\ControllerCategoria::class, 'storeSub'])->name('subcategoria');
 Route::get('/borrarCategoria/{id}', [App\Http\Controllers\ControllerCategoria::class, 'destroy'])->name('borrarCategoria');
+Route::get('/borrarSubCategoria/{id}', [App\Http\Controllers\ControllerCategoria::class, 'destroySub'])->name('borrarSubCategoria');
 Route::get('/editarCategoria/{id}', [App\Http\Controllers\ControllerCategoria::class, 'edit'])->name('editarCategoria');
 Route::post('/actualizarCategoria', [App\Http\Controllers\ControllerCategoria::class, 'update'])->name('actualizarCategoria');
 

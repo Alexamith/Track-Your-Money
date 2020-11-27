@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categoria;
+use App\Models\Subcategoria;
 use Illuminate\Http\Request;
 
 class ControllerCategoria extends Controller
@@ -41,6 +42,33 @@ class ControllerCategoria extends Controller
             return view('cruds.categoria',['tipos' => $tipos]);
         }
     }
+    public function subcategoria()
+    {
+        $usuario = \Auth::user()->id;
+        $sql = "select sc.id as subcategoriaid,c.id as categoria,c.categoria_padre as pertenece,tp.tipo,sc.nombre,sc.detalle, sc.presupuesto, sc.created_at
+        from subcategoria as sc
+        join categoria as c
+        on sc.categoria_id = c.id
+        join tipo_categoria as tp
+        on c.tipo = tp.id
+        and c.usuario_id =".$usuario;
+        $subcategorias = \DB::select($sql);
+        $categorias = \DB::select("select * from categoria where usuario_id=".$usuario);
+
+        if (count($categorias) != 0) {
+            if (count($subcategorias) != 0) {
+                foreach ($subcategorias as $value) {
+                    $value->presupuesto = number_format($value->presupuesto,2);
+                }
+                return view('cruds.subcategoria', ['subcategorias' => $subcategorias,'cate' => $categorias]);
+            }else{
+                return view('cruds.subcategoria',['sinsubcategorias' => 'al parecer no tienes subcategorías registradas ','cate' => $categorias]);
+            }   
+            
+        } else {
+            return view('cruds.subcategoria',['sincategorias' => 'lo sentimos, al no tener categorias no puedes tener subcategorías']);
+        }
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -69,6 +97,17 @@ class ControllerCategoria extends Controller
         ];
         Categoria::create($dataCategoria);
         return redirect()->route('categoria');
+    }
+    public function storeSub(Request $request)
+    {
+        $dataSubCategoria = [
+            "categoria_id" => $request->categoria,
+            "detalle" => $request->descripcion,
+            "nombre" => $request->name,
+            "presupuesto" => $request->presupuesto
+        ];
+        Subcategoria::create($dataSubCategoria);
+        return redirect()->route('subcategoria');
     }
 
     /**
@@ -125,5 +164,11 @@ class ControllerCategoria extends Controller
         $categoria = Categoria::find($id);
         $categoria->delete();
         return redirect()->route('categoria');
+    }
+    public function destroySub($id)
+    {
+        $subcategoria = Subcategoria::find($id);
+        $subcategoria->delete();
+        return redirect()->route('subcategoria');
     }
 }

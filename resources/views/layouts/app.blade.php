@@ -15,9 +15,9 @@
 
 <body class="sb-nav-fixed">
     @include ('modals')
-    
+
     <div id="app">
-        
+
         <nav class="sb-topnav navbar navbar-expand-md navbar-light bg-blue shadow-sm" style="background-color: #3786eb;">
             <strong>
                 @if (Auth::check())
@@ -98,10 +98,22 @@
                             <nav class="sb-sidenav-menu-nested nav" style="color: white;">
                                 <a class="nav-link" style="color: white;" href="{{ route('moneda') }}">Monedas</a>
                                 <a class="nav-link" style="color: white;" href="{{ route('cuenta') }}">Cuentas</a>
-                                <a class="nav-link" style="color: white;" href="{{ route('categoria') }}">Categorías</a>
+                                <!-- <a class="nav-link" style="color: white;" href="{{ route('categoria') }}">Categorías</a> -->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" style="color: white;" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Categorías
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="{{ route('categoria') }}">Categorías</a>
+                                        <a class="dropdown-item" href="{{ route('subcategoria') }}">Subcategorias</a>
+                                        <div class="dropdown-divider"></div>
+                                    </div>
+                                </li>
                                 <a class="nav-link" style="color: white;" href="{{ route('transaccion') }}">Transacciones</a>
                             </nav>
                         </div>
+
+
 
 
 
