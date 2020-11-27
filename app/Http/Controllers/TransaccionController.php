@@ -100,7 +100,7 @@ class TransaccionController extends Controller
     public function store(Request $request)
     {
         $tralado =  $request->traslado;
-
+       
         $dataTransaccion = [
             "categoria" => $request->categoria,
             "cuenta" => $request->cuenta,
@@ -112,12 +112,12 @@ class TransaccionController extends Controller
         join tipo_categoria as tp
         on c.tipo = tp.id
         and c.id =".$request->categoria);
-  
-        if ($tipocategoria[0]->id == 3) {
+   
+        if ($tralado == true) {
             if ($request->cuenta == $request->cuentaCredito) {
                 session()->flash('iguales', 'No puede hacer un traslado en la misma cuenta');
+                return redirect()->route('transaccion');
             }else{
-   
                 $dataTraslado = [
                     "cuenta_debito" =>  $request->cuenta,
                     "monto_debitado" => $request->monto,
@@ -127,7 +127,8 @@ class TransaccionController extends Controller
                 $this->traslados($request->cuenta,$request->cuentaCredito,$request->monto);
                 traslado::create($dataTraslado);
             }
-        }else{
+        }
+        else{
             
             $this->actualizar_saldo_cuenta($tipocategoria[0]->id,$request->cuenta,$request->monto);
         }
@@ -136,6 +137,7 @@ class TransaccionController extends Controller
     }
     public function traslados($cuentaD,$cuentaC, $monto)
     {
+
         $cuentaDebito = Cuenta::findOrFail($cuentaD);
         $cuentaCredito = Cuenta::findOrFail($cuentaC);
         $cuentaDebito->saldo_inicial =  $cuentaDebito->saldo_inicial - $monto;

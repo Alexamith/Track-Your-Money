@@ -63,10 +63,11 @@
                             <td>{{$transaccion->tasa}}</td>
                             @if($transaccion->tipo == 'Ingresos')
                             <td>+ {{$transaccion->monto}}</td>
-                            @elseif($transaccion->tipo == 'Traslados')
-                            <td>-+{{$transaccion->monto}}</td>
-                            @else
+                            @elseif($transaccion->tipo == 'Gastos')
                             <td>{{$transaccion->monto}}</td>
+                            @else
+                            <td>-+{{$transaccion->monto}}</td>
+
                             @endif
                             
                             <td>{{$transaccion->detalle}}</td>
