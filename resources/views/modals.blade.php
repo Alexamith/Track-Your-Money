@@ -716,6 +716,7 @@
         <div class="modal-content">
             <form method="POST" action="{{ route('actualizarSubCategoria') }}">
                 @csrf
+                <input type="hidden" id="id" name="id" value="{{session('subcategoriaEdit')->id}}">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle">Editar Subcategorias</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -727,7 +728,7 @@
                         <div class="form-group">
 
                             <!-- select -->
-                            {{session('subcategoriaEdit')->id}}
+
                             <div class="form-group">
                                 <label class="small mb-1" for="categoria">Seleccione la categoría padre</label>
                                 
@@ -750,7 +751,7 @@
                             <!-- Nombre -->
                             <div class="form-group">
                                 <label class="small mb-1" for="inputFirstName">Nombre</label>
-                                <input class="form-control py-4" id="name" name="name" type="text" placeholder="Nombre" />
+                                <input class="form-control py-4" id="name" name="name" type="text"  value="{{session('subcategoriaEdit')->nombre}}" placeholder="Nombre" />
                                 @error('name')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -761,12 +762,12 @@
                         <!-- Descripcion -->
                         <div class="form-group">
                             <label class="small mb-1" for="inputEmailAddress">Descripción</label>
-                            <input class="form-control py-4 @error('descripcion') is-invalid @enderror" value="{{ old('descripcion') }}" required autocomplete="descripcion" id="descripcion" name="descripcion" type="descripcion" aria-describedby="descripcionHelp" placeholder="Descripcion" />
+                            <input class="form-control py-4 @error('descripcion') is-invalid @enderror" value="{{ session('subcategoriaEdit')->detalle}}" required autocomplete="descripcion" id="descripcion" name="descripcion" type="descripcion" aria-describedby="descripcionHelp" placeholder="Descripcion" />
                         </div>
                         <!-- presupuesto -->
                         <div class="form-group">
                             <label class="small mb-1" for="saldo">Presupuesto</label>
-                            <input class="form-control py-4 @error('saldo') is-invalid @enderror" value="{{ old('presupuesto') }}" required autocomplete="presupuesto" id="presupuesto" name="presupuesto" type="text" aria-describedby="presupuestoHelp" placeholder="Presupuesto" />
+                            <input class="form-control py-4 @error('saldo') is-invalid @enderror" value="{{ session('subcategoriaEdit')->presupuesto }}" required autocomplete="presupuesto" id="presupuesto" name="presupuesto" type="text" aria-describedby="presupuestoHelp" placeholder="Presupuesto" />
                         </div>
                     </div>
                 </div>

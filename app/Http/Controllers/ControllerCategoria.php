@@ -160,6 +160,16 @@ class ControllerCategoria extends Controller
         $Categoria->save();
         return redirect()->route('categoria');
     }
+    public function updateSub(Request $request)
+    {
+        $Subcategoria = Subcategoria::findOrFail($request->id);
+        $Subcategoria->categoria_id = $request->categoria;
+        $Subcategoria->detalle = $request->descripcion;
+        $Subcategoria->nombre = $request->name;
+        $Subcategoria->presupuesto = $request->presupuesto;
+        $Subcategoria->save();
+        return redirect()->route('subcategoria');
+    }
 
     /**
      * Remove the specified resource from storage.
