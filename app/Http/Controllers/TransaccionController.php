@@ -25,7 +25,7 @@ class TransaccionController extends Controller
      */
     public function index()
     {
-        $usuario = \Auth::user()->id; 
+        $usuario = \Auth::user()->id;
         $transacciones = $this->obtener_transacciones($usuario);
         $tipos = $this->obtener_tipos_de_transaccion();
         $categorias = $this->obtener_categorias($usuario);
@@ -36,26 +36,26 @@ class TransaccionController extends Controller
                 if ($value->tipo == 'Gastos') {
                     $value->monto =  $value->monto - ($value->monto * 2);
                 }
-                $value->monto = number_format($value->monto, 2);            
+                $value->monto = number_format($value->monto, 2);
             }
-            return view('cruds.transacciones', ['transacciones' => $transacciones, 'tipos' => $tipos, 'categorias'=>$categorias, 'cuentas'=>$cuentas]);
+            return view('cruds.transacciones', ['transacciones' => $transacciones, 'tipos' => $tipos, 'categorias' => $categorias, 'cuentas' => $cuentas]);
         } else {
-            return view('cruds.transacciones', ['tipos' => $tipos, 'categorias'=>$categorias, 'cuentas'=>$cuentas]);
+            return view('cruds.transacciones', ['tipos' => $tipos, 'categorias' => $categorias, 'cuentas' => $cuentas]);
         }
     }
-    
+
     public function obtener_categorias($usuario)
     {
         $categorias = \DB::select("select c.id,c.categoria_padre, tp.tipo, c.descripcion,c.presupuesto
         from categoria as c
         join tipo_categoria as tp
         on c.tipo = tp.id
-        and usuario_id =".$usuario);
+        and usuario_id =" . $usuario);
         return $categorias;
     }
     public function obtener_cuentas($usuario)
     {
-        $cuentas = \DB::select("select * from cuenta where usuario_id =".$usuario);
+        $cuentas = \DB::select("select * from cuenta where usuario_id =" . $usuario);
         return $cuentas;
     }
     public function obtener_tipos_de_transaccion()
@@ -100,42 +100,49 @@ class TransaccionController extends Controller
     public function store(Request $request)
     {
         $tralado =  $request->traslado;
-       
         $dataTransaccion = [
             "categoria" => $request->categoria,
             "cuenta" => $request->cuenta,
             "monto" => $request->monto,
             "detalle" => $request->detalle,
-            
+
         ];
         $tipocategoria = \DB::select("select tp.id from categoria as c
         join tipo_categoria as tp
         on c.tipo = tp.id
-        and c.id =".$request->categoria);
-   
+        and c.id =" . $request->categoria);
+        
         if ($tralado == true) {
-            if ($request->cuenta == $request->cuentaCredito) {
-                session()->flash('iguales', 'No puede hacer un traslado en la misma cuenta');
+            if ($tipocategoria[0]->id == 3) {
+                if ($request->cuenta == $request->cuentaCredito) {
+                    session()->flash('iguales', 'No puede hacer un traslado en la misma cuenta');
+                    return redirect()->route('transaccion');
+                } else {
+                    Transaccion::create($dataTransaccion);
+                    $max = \DB::select("SELECT MAX(id) as id FROM transaccion;");
+                    
+                    $dataTraslado = [
+                        "cuenta_debito" =>  $request->cuenta,
+                        "monto_debitado" => $request->monto,
+                        "cuenta_credito" => $request->cuentaCredito,
+                        "monto_acreditado" => $request->monto,
+                        "transaccion" => $max[0]->id
+                    ];
+                    $this->traslados($request->cuenta, $request->cuentaCredito, $request->monto);
+                    traslado::create($dataTraslado);
+                }
+            } else {
+                session()->flash('sintipotraslado', 'Para realizar traslados tienes que tener una categoria de traslados');
                 return redirect()->route('transaccion');
-            }else{
-                $dataTraslado = [
-                    "cuenta_debito" =>  $request->cuenta,
-                    "monto_debitado" => $request->monto,
-                    "cuenta_credito" => $request->cuentaCredito,
-                    "monto_acreditado" => $request->monto
-                ];
-                $this->traslados($request->cuenta,$request->cuentaCredito,$request->monto);
-                traslado::create($dataTraslado);
             }
+        } else {
+            Transaccion::create($dataTransaccion);
+            $this->actualizar_saldo_cuenta($tipocategoria[0]->id, $request->cuenta, $request->monto,0);
         }
-        else{
-            
-            $this->actualizar_saldo_cuenta($tipocategoria[0]->id,$request->cuenta,$request->monto);
-        }
-        Transaccion::create($dataTransaccion);
+        
         return redirect()->route('transaccion');
     }
-    public function traslados($cuentaD,$cuentaC, $monto)
+    public function traslados($cuentaD, $cuentaC, $monto)
     {
 
         $cuentaDebito = Cuenta::findOrFail($cuentaD);
@@ -145,18 +152,33 @@ class TransaccionController extends Controller
         $cuentaDebito->save();
         $cuentaCredito->save();
     }
-    public function actualizar_saldo_cuenta($tipo, $cuenta, $monto)
+    public function actualizar_saldo_cuenta($tipo, $cuenta, $monto, $id_transaccion)
     {
         $cuenta = Cuenta::findOrFail($cuenta);
 
         if ($tipo == 1) {
             $cuenta->saldo_inicial =  $cuenta->saldo_inicial - $monto;
-        }
-        else if($tipo == 2){
+        } else if ($tipo == 2) {
             $cuenta->saldo_inicial =  $cuenta->saldo_inicial + $monto;
+        }else if($tipo == 3){
+       
+            $monto_antiguo = \DB::select("select monto_debitado, cuenta_debito, cuenta_credito from traslado where transaccion =".$id_transaccion);
+            if ($monto_antiguo[0]->monto_debitado != $monto) {
+                $cuentadebito = Cuenta::findOrFail($monto_antiguo[0]->cuenta_debito);
+                $cuentadebito->saldo_inicial = $cuentadebito->saldo_inicial + $monto_antiguo[0]->monto_debitado;
+                $cuentacredito = Cuenta::findOrFail($monto_antiguo[0]->cuenta_credito);
+                $cuentacredito->saldo_inicial = $cuentacredito->saldo_inicial - $monto_antiguo[0]->monto_debitado;
+
+                $cuentadebito->saldo_inicial = $cuentadebito->saldo_inicial - $monto;
+                $cuentacredito->saldo_inicial = $cuentacredito->saldo_inicial + $monto;
+                $cuentadebito->save();
+                $cuentacredito->save();
+            }
+            
         }
         $cuenta->save();
     }
+    
     /**
      * Display the specified resource.
      *
@@ -176,10 +198,17 @@ class TransaccionController extends Controller
      */
     public function edit($id)
     {
-        $transaccion = Transaccion::find($id);
+        $transaccion = \DB::select("select c.categoria_padre,t.id as idt,c.id,t.monto,t.cuenta,tc.id as tiponombre,c.descripcion, c.presupuesto, c.created_at, c.updated_at,c.usuario_id from 
+        transaccion as t
+        join categoria as c
+        on t.categoria = c.id
+        join tipo_categoria as tc
+        on c.tipo = tc.id
+        and t.id =" . $id);
+        // $transaccion = Transaccion::find($id);
         return redirect()->route("transaccion")
             ->with("mensaje", 'dasdadasdasdas')
-            ->with("transaccion", $transaccion);
+            ->with("transaccion", $transaccion[0]);
     }
 
     /**
@@ -191,15 +220,46 @@ class TransaccionController extends Controller
      */
     public function update(Request $request)
     {
-
+        
+        $tralado =  $request->traslado;
+        $tipocategoria = \DB::select("select tp.id from categoria as c
+        join tipo_categoria as tp
+        on c.tipo = tp.id
+        and c.id =" . $request->categoria);
         $transaccion = Transaccion::findOrFail($request->id);
-        $transaccion->cuenta =  $request->cuenta;
-        $transaccion->monto = $request->monto;
-        $transaccion->detalle = $request->detalle;
-        $transaccion->categoria = $request->categoria;
-        $transaccion->save();
-        return redirect()->route('transaccion');
+        if ($tralado == true) {
+            if ($tipocategoria[0]->id == 3) {
+                if ($request->cuenta == $request->cuentaCredito) {
+                    session()->flash('iguales', 'No puede hacer un traslado en la misma cuenta');
+                    return redirect()->route('transaccion');
+                } 
+                $this->actualizar_saldo_cuenta($tipocategoria[0]->id, $request->cuenta, $request->monto,$request->id);
+                
+                $transaccion->monto = $request->monto;
+                $transaccion->detalle = $request->detalle;
+                $transaccion->save();
+                return redirect()->route('transaccion');
 
+            } else {
+                session()->flash('sintipotraslado', 'Para realizar traslados tienes que tener una categoria de traslados');
+                return redirect()->route('transaccion');
+            }
+        } else {
+            $cuenta = Cuenta::findOrFail($transaccion->cuenta);
+            if ($request->monto != $transaccion->monto) {
+                $cuenta->saldo_inicial = $cuenta->saldo_inicial - $transaccion->monto;      
+                
+                $cuenta->saldo_inicial = $cuenta->saldo_inicial + $request->monto;
+                $cuenta->save();
+                $transaccion->monto =  $request->monto;;
+
+            }else{
+                $transaccion->monto = $transaccion->monto;
+            }
+            $transaccion->detalle = $request->detalle;
+            $transaccion->save();
+            return redirect()->route('transaccion');
+        }
     }
 
     /**

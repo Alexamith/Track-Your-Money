@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class traslado extends Model
 {
     protected $table = 'traslado';
-    protected $fillable = ['cuenta_debito','monto_debitado','cuenta_credito','monto_acreditado'];
+    protected $fillable = ['cuenta_debito','monto_debitado','cuenta_credito','monto_acreditado','transaccion'];
 }

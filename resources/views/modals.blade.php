@@ -413,7 +413,7 @@
                 <div class="modal-body">
                     <div class="card-body">
                         <!-- select categoria-->
-                        <div class="form-group">
+                        <div class="form-group" id="divCategoria">
                             <label class="small mb-1" for="categoria">Seleccione una categoria</label>
                             <select class="form-control form-control-lg" id="categoria" name="categoria" style="font-size: 15px;">
                                 @isset($categorias)
@@ -495,7 +495,8 @@
         <div class="modal-content">
             <form method="POST" action="{{ route('actualizarTransacciones') }}">
                 @csrf
-                <input type="hidden" id="id" name="id" value="{{session('transaccion')->id}}">
+                <input type="hidden" id="id" name="id" value="{{session('transaccion')->idt}}">
+
                 <div class="modal-header">
                     <h5 class="modal-title" id="modal_crear_transaccionLongTitle">Editar transacción</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -504,36 +505,8 @@
                 </div>
                 <div class="modal-body">
                     <div class="card-body">
-                        <!-- select tipos-->
-                        <!-- <input type="hidden" id="id" name="id" value="{{session('transaccion')->id}}">
                         <div class="form-group">
-                            <label class="small mb-1" for="tipo">Seleccione un tipo de transacción</label>
-                            <select class="form-control form-control-lg" id="tipo" name="tipo" style="font-size: 15px;">
-                                @isset($tipos)
-
-                                @foreach ($tipos as $tipo)
-                                @if($tipo->id == 3)
-
-                                @if($tipo->id == session('transaccion')->tipo)
-                                <option value="{{$tipo->id}}" id="tipoTransferenciaE" selected="selected" style="font-size: 15px;">{{$tipo->tipo}}</option>
-                                @else
-                                <option value="{{$tipo->id}}" id="tipoTransferenciaE" style="font-size: 15px;">{{$tipo->tipo}}</option>
-                                @endif
-
-                                @else
-                                @if($tipo->id == session('transaccion')->tipo)
-                                <option value="{{$tipo->id}}" id="tipoOtroE" style="font-size: 15px;">{{$tipo->tipo}}</option>
-                                @endif
-                                @endif
-
-                                @endforeach
-                                @endisset
-
-                            </select>
-                        </div> -->
-                        <!-- select cuentas-->
-                        <div class="form-group">
-                            <label class="small mb-1" for="cuenta">Seleccione una cuenta</label>
+                            <label class="small mb-1" for="cuenta">Cuenta a debitar</label>
                             <select class="form-control form-control-lg" id="cuenta" name="cuenta" style="font-size: 15px;">
                                 @isset($cuentas)
                                 @foreach ($cuentas as $cuenta)
@@ -547,23 +520,39 @@
                             </select>
                         </div>
                         <!-- select cuentas credito-->
-                        <div class="form-group" id="divCreditoEdit">
-                            <label class="small mb-1" for="cuenta">Seleccione la cuenta a acreditar</label>
-                            <select class="form-control form-control-lg" id="cuentaCredito" name="cuentaCredito" style="font-size: 15px;">
-                                @isset($cuentas)
-                                @foreach ($cuentas as $cuenta)
-                                <option value="{{$cuenta->id}}" style="font-size: 15px;">{{$cuenta->nombre_corto}}</option>
-                                @endforeach
-                                @endisset
-                            </select>
+
+                        @if(session('transaccion')->tiponombre == 3)
+                        <div class="form-row">
+                            <div class="col-md-10">
+                                <div class="form-group" id="">
+                                    <label class="small mb-1" for="cuenta">Cuenta acreditar</label>
+                                    <select class="form-control form-control-lg" id="cuentaCredito" name="cuentaCredito" style="font-size: 15px;">
+                                        @isset($cuentas)
+                                        @foreach ($cuentas as $cuenta)
+                                        <option value="{{$cuenta->id}}" style="font-size: 15px;">{{$cuenta->nombre_corto}}</option>
+                                        @endforeach
+                                        @endisset
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <center> <label class="small" for="detalle">Traslado</label></center>
+                                    <input class="form-control py-4" type="checkbox" id="traslado" name="traslado" checked enable>
+                                </div>
+                            </div>
                         </div>
+                        @endif
+
+
+                        
                         <!-- select categoria-->
                         <div class="form-group">
                             <label class="small mb-1" for="categoria">Seleccione una categoria</label>
                             <select class="form-control form-control-lg" id="categoria" name="categoria" style="font-size: 15px;">
                                 @isset($categorias)
                                 @foreach ($categorias as $categoria)
-                                @if($categoria->id == session('transaccion')->categoria)
+                                @if($categoria->id == session('transaccion')->id)
                                 <option value="{{$categoria->id}}" selected="selected" style="font-size: 15px;">{{$categoria->categoria_padre}}</option>
                                 @else{
                                 <option value="{{$categoria->id}}" style="font-size: 15px;">{{$categoria->categoria_padre}}</option>
@@ -580,7 +569,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="small mb-1" for="detalle">Detalle</label>
-                                    <input class="form-control py-4 @error('simbolo') is-invalid @enderror" value="{{session('transaccion')->detalle}}" id="detalle" name="detalle" type="text" placeholder="Detalle" required autocomplete="new-detalle" />
+                                    <input class="form-control py-4 @error('simbolo') is-invalid @enderror" value="{{session('transaccion')->descripcion}}" id="detalle" name="detalle" type="text" placeholder="Detalle" required autocomplete="new-detalle" />
                                     @error('detalle')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>

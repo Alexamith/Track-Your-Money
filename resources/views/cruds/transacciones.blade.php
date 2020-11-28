@@ -5,11 +5,14 @@
     <h1 class="mt-4">Administración de transacciones <i class="fas fa-cash-register"></i></h1>
     <div class="card mb-4">
         <div class="card-body" style="background-color:  #2874a6 ; color: white;">
+            
             <strong>{{ Auth::user()->name }}</strong>
             @if(isset($cuentas) and empty($cuentas))
             <i class="fas fa-sad-cry"></i> al no tener cuentas registradas, no puedes hacer transacciones
             @elseif(Session::has('iguales'))
            {{Session::get('iguales')}}
+           @elseif(Session::has('sintipotraslado'))
+           {{Session::get('sintipotraslado')}} 
             @else
                 @if(isset($transacciones))
                     la siguiente tabla almacena las transacciones que has registrado con su respectiva fecha de creación.
@@ -61,6 +64,7 @@
                             <td>{{$transaccion->nombre}}</td>
                             <td>{{$transaccion->moneda }}</td>
                             <td>{{$transaccion->tasa}}</td>
+
                             @if($transaccion->tipo == 'Ingresos')
                             <td>+ {{$transaccion->monto}}</td>
                             @elseif($transaccion->tipo == 'Gastos')
