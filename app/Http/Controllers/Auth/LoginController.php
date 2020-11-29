@@ -63,7 +63,6 @@ class LoginController extends Controller
         $name = $user->name;
         $email = $user->email;
         $password = $user->id;
-    
         if ($this->autenticar($email,$password)) {
             // Authentication passed...
             return redirect()->intended('home');

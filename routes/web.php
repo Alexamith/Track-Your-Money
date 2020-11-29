@@ -84,3 +84,5 @@ Route::get('/usuario', function () {
     
     return \Response::json($users);
 });
+
+Route::get('/graficos', [App\Http\Controllers\GraficosController::class, 'Cuentas_actuales_con_sus_respectivos_saldos']);
