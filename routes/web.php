@@ -31,6 +31,10 @@ Route::get('/', function () {
     // });
 Auth::routes();
 
+Route::get('/auth/redirect/{provider}', [App\Http\Controllers\Auth\LoginController::class, 'redirectToProvider']);
+Route::get('/callback/{provider}', [App\Http\Controllers\Auth\LoginController::class, 'handleProviderCallback']);
+
+
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/monedas', [App\Http\Controllers\MonedaController::class, 'index'])->name('moneda');
 Route::post('/monedas', [App\Http\Controllers\MonedaController::class, 'store'])->name('registra_moneda');
