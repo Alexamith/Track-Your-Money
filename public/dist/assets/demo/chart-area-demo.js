@@ -77,56 +77,78 @@ function ingresos(arreglo) {
         }
       }
     });
-
 }
 
 
-
-var ctx = document.getElementById("myAreaChart2");
-var myLineChart = new Chart(ctx, {
-  type: 'line',
-  data: {
-    labels: ["Cable", "Luz", "Internet", "Casa", "Familia", "Universidad", "Carro"],
-    datasets: [{
-      label: "Sessions",
-      lineTension: 0.3,
-      backgroundColor: "rgba(255,137,137,0.5)",
-      borderColor: "#de0404",
-      pointRadius: 5,
-      pointBackgroundColor: "#de0404",
-      pointBorderColor: "rgba(255,255,255,0.8)",
-      pointHoverRadius: 5,
-      pointHoverBackgroundColor: "#fc6868",
-      pointHitRadius: 50,
-      pointBorderWidth: 2,
-      data: [10000, 30162, 36263, 38394,40000, 41162, 52263],
-    }],
+// AJAX
+$.ajax({
+  url: "http://trackyourmoney.com/graficos",
+  method: "get",
+  data: "tipo=gastos",
+  dataType: "json",
+  success: function(respuesta) {
+    gastos(respuesta);
   },
-  options: {
-    scales: {
-      xAxes: [{
-        time: {
-          unit: 'date'
-        },
-        gridLines: {
-          display: false
-        },
-        ticks: {
-          maxTicksLimit: 7
-        }
-      }],
-      yAxes: [{
-        ticks: {
-          min: 0,
-          maxTicksLimit: 5
-        },
-        gridLines: {
-          color: "rgba(0, 0, 0, .15)",
-        }
-      }],
-    },
-    legend: {
-      display: false
-    }
+  error: function() {
+      console.log("No se ha podido obtener la información");
   }
 });
+
+var ctxGastos = document.getElementById("myAreaGastos");
+function gastos(arreglo) {
+  let labelsGastos = [];
+  let dataGastos = [];
+  for (let index = 0; index < arreglo.length; index++) {
+    const element = arreglo[index];
+    labelsGastos.push(element.categoria_padre);
+    dataGastos.push(element.presupuesto);
+  }
+  var myLineChart = new Chart(ctxGastos, {
+    type: 'line',
+    data: {
+      labels: labelsGastos,
+      datasets: [{
+        label: "Gastos",
+        lineTension: 0.3,
+        backgroundColor: "rgba(255,137,137,0.5)",
+        borderColor: "#de0404",
+        pointRadius: 5,
+        pointBackgroundColor: "#de0404",
+        pointBorderColor: "rgba(255,255,255,0.8)",
+        pointHoverRadius: 5,
+        pointHoverBackgroundColor: "#fc6868",
+        pointHitRadius: 50,
+        pointBorderWidth: 2,
+        data: dataGastos,
+      }],
+    },
+    options: {
+      scales: {
+        xAxes: [{
+          time: {
+            unit: 'date'
+          },
+          gridLines: {
+            display: false
+          },
+          ticks: {
+            maxTicksLimit: 7
+          }
+        }],
+        yAxes: [{
+          ticks: {
+            min: 0,
+            maxTicksLimit: 5
+          },
+          gridLines: {
+            color: "rgba(0, 0, 0, .15)",
+          }
+        }],
+      },
+      legend: {
+        display: false
+      }
+    }
+  });
+  
+}
