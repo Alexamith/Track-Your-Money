@@ -6,7 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Laravel\Socialite\Facades\Socialite;
-
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 class LoginController extends Controller
 {
     /*
@@ -59,9 +60,31 @@ class LoginController extends Controller
     public function handleProviderCallback($provider)
     {
         $user = Socialite::driver($provider)->user();
-        dd($user);
-
-        // $user->token;
+        $name = $user->name;
+        $email = $user->email;
+        $password = $user->id;
+    
+        if ($this->autenticar($email,$password)) {
+            // Authentication passed...
+            return redirect()->intended('home');
+        }else{
+             User::create([
+                'name' => $name,
+                'email' => $email,
+                'password' => Hash::make($password),
+            ]);
+            if ($this->autenticar($email,$password)) {
+                // Authentication passed...
+                return redirect()->intended('home');
+            }
+        }
     }
-
+    public function autenticar($email, $password)
+    {
+        if (\Auth::attempt(['email' => $email, 'password' => $password])) {
+            return true;
+        }else{
+            return false;
+        }
+}
 }
