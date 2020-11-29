@@ -86,3 +86,5 @@ Route::get('/usuario', function () {
 });
 
 Route::get('/graficos', [App\Http\Controllers\GraficosController::class, 'Cuentas_actuales_con_sus_respectivos_saldos']);
+
+// Route::get('/graficos', [App\Http\Controllers\GraficosController::class, 'principales_ingresos']);

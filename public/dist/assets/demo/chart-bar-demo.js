@@ -1,8 +1,8 @@
 // Set new default font family and font color to mimic Bootstrap's default styling
 Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
 Chart.defaults.global.defaultFontColor = '#292b2c';
+
 // AJAX
-let cuentas = [];
 $.ajax({
   url: "http://trackyourmoney.com/graficos",
   method: "get",
@@ -15,14 +15,13 @@ $.ajax({
       console.log("No se ha podido obtener la información");
   }
 });
+
 // Bar Chart Example
 var ctx = document.getElementById("myBarChart");
 
 function graficos_cuentas_saldos(arreglo) {
     let labelsmyLineChart = [];
     let datasmyLineChart = [];
-
-
     for (let index = 0; index < arreglo.length; index++) {
       const element = arreglo[index];
       labelsmyLineChart.push(element.nombre_corto);
