@@ -111,7 +111,7 @@ class TransaccionController extends Controller
         join tipo_categoria as tp
         on c.tipo = tp.id
         and c.id =" . $request->categoria);
-        
+
         if ($tralado == true) {
             if ($tipocategoria[0]->id == 3) {
                 if ($request->cuenta == $request->cuentaCredito) {
@@ -120,7 +120,7 @@ class TransaccionController extends Controller
                 } else {
                     Transaccion::create($dataTransaccion);
                     $max = \DB::select("SELECT MAX(id) as id FROM transaccion;");
-                    
+
                     $dataTraslado = [
                         "cuenta_debito" =>  $request->cuenta,
                         "monto_debitado" => $request->monto,
@@ -137,24 +137,11 @@ class TransaccionController extends Controller
             }
         } else {
             Transaccion::create($dataTransaccion);
-            $this->actualizar_saldo_cuenta($tipocategoria[0]->id, $request->cuenta, $request->monto,0);
+            $this->actualizar_saldo_cuenta($tipocategoria[0]->id, $request->cuenta, $request->monto, 0);
         }
-        
+
         return redirect()->route('transaccion');
     }
-    // public function traslados($cuentaD, $cuentaC, $monto)
-    // {
-    //     $moneda = \DB::select("select moneda from cuenta where id =".$cuentaD);
-    //     $moneda2 = \DB::select("select moneda from cuenta where id =".$cuentaC);
-
-    //     $cuentaDebito = Cuenta::findOrFail($cuentaD);
-    //     $cuentaCredito = Cuenta::findOrFail($cuentaC);
-
-    //     $cuentaDebito->saldo_inicial =  $cuentaDebito->saldo_inicial - $monto;
-    //     $cuentaCredito->saldo_inicial =  $cuentaCredito->saldo_inicial + $monto;
-    //     $cuentaDebito->save();
-    //     $cuentaCredito->save();
-    // }
     public function traslados($cuentaD, $cuentaC, $monto)
     {
         $cuentaDebito = Cuenta::findOrFail($cuentaD);
@@ -184,25 +171,35 @@ class TransaccionController extends Controller
             $cuenta->saldo_inicial =  $cuenta->saldo_inicial - $monto;
         } else if ($tipo == 2) {
             $cuenta->saldo_inicial =  $cuenta->saldo_inicial + $monto;
-        }else if($tipo == 3){
-       
-            $monto_antiguo = \DB::select("select monto_debitado, cuenta_debito, cuenta_credito from traslado where transaccion =".$id_transaccion);
+        } else if ($tipo == 3) {
+            $monto_antiguo = \DB::select("select monto_debitado, cuenta_debito, cuenta_credito from traslado where transaccion =" . $id_transaccion);
+
             if ($monto_antiguo[0]->monto_debitado != $monto) {
                 $cuentadebito = Cuenta::findOrFail($monto_antiguo[0]->cuenta_debito);
-                $cuentadebito->saldo_inicial = $cuentadebito->saldo_inicial + $monto_antiguo[0]->monto_debitado;
                 $cuentacredito = Cuenta::findOrFail($monto_antiguo[0]->cuenta_credito);
-                $cuentacredito->saldo_inicial = $cuentacredito->saldo_inicial - $monto_antiguo[0]->monto_debitado;
+                $moneda_id = $cuentadebito->moneda;
+                $moneda2_id = $cuentacredito->moneda;
+                if ($moneda_id != $moneda2_id) {
+                    $tasa_cambio =  \DB::select("select monto_equivalente from tasa where moneda_local =" . $moneda_id . " and moneda_equivalente =" . $moneda2_id);
+                    
+                    $tasa_cambio =  $tasa_cambio[0]->monto_equivalente;
+                    $cuentadebito->saldo_inicial = $cuentadebito->saldo_inicial + $monto_antiguo[0]->monto_debitado;
+                    $cuentadebito->saldo_inicial = $cuentadebito->saldo_inicial - $monto;
 
-                $cuentadebito->saldo_inicial = $cuentadebito->saldo_inicial - $monto;
-                $cuentacredito->saldo_inicial = $cuentacredito->saldo_inicial + $monto;
+                    $monto = $monto * (float)$tasa_cambio;
+                    $cuentacredito->saldo_inicial = $cuentacredito->saldo_inicial - $monto;
+                } else {
+                    $cuentadebito->saldo_inicial = $cuentadebito->saldo_inicial + $monto_antiguo[0]->monto_debitado;
+
+                    $cuentacredito->saldo_inicial = $cuentacredito->saldo_inicial - $monto_antiguo[0]->monto_debitado;
+                }
                 $cuentadebito->save();
                 $cuentacredito->save();
             }
-            
         }
         $cuenta->save();
     }
-    
+
     /**
      * Display the specified resource.
      *
@@ -244,7 +241,7 @@ class TransaccionController extends Controller
      */
     public function update(Request $request)
     {
-        
+
         $tralado =  $request->traslado;
         $tipocategoria = \DB::select("select tp.id from categoria as c
         join tipo_categoria as tp
@@ -256,14 +253,13 @@ class TransaccionController extends Controller
                 if ($request->cuenta == $request->cuentaCredito) {
                     session()->flash('iguales', 'No puede hacer un traslado en la misma cuenta');
                     return redirect()->route('transaccion');
-                } 
-                $this->actualizar_saldo_cuenta($tipocategoria[0]->id, $request->cuenta, $request->monto,$request->id);
-                
+                }
+                $this->actualizar_saldo_cuenta($tipocategoria[0]->id, $request->cuenta, $request->monto, $request->id);
+
                 $transaccion->monto = $request->monto;
                 $transaccion->detalle = $request->detalle;
                 $transaccion->save();
                 return redirect()->route('transaccion');
-
             } else {
                 session()->flash('sintipotraslado', 'Para realizar traslados tienes que tener una categoria de traslados');
                 return redirect()->route('transaccion');
@@ -271,13 +267,12 @@ class TransaccionController extends Controller
         } else {
             $cuenta = Cuenta::findOrFail($transaccion->cuenta);
             if ($request->monto != $transaccion->monto) {
-                $cuenta->saldo_inicial = $cuenta->saldo_inicial - $transaccion->monto;      
-                
+                $cuenta->saldo_inicial = $cuenta->saldo_inicial - $transaccion->monto;
+
                 $cuenta->saldo_inicial = $cuenta->saldo_inicial + $request->monto;
                 $cuenta->save();
                 $transaccion->monto =  $request->monto;;
-
-            }else{
+            } else {
                 $transaccion->monto = $transaccion->monto;
             }
             $transaccion->detalle = $request->detalle;

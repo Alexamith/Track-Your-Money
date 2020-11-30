@@ -6,27 +6,7 @@ use Illuminate\Http\Request;
 
 class GraficosController extends Controller
 {
-    // public function traslados($cuentaD, $cuentaC, $monto)
-    // {
-    //     $cuentaDebito = Cuenta::findOrFail($cuentaD);
-    //     $cuentaCredito = Cuenta::findOrFail($cuentaC);
-    //     $moneda_id = \DB::select("select moneda from cuenta where id =" . $cuentaD);
-    //     $moneda_id = $moneda_id[0]->moneda;
-    //     $moneda2_id = \DB::select("select moneda from cuenta where id =" . $cuentaC);
-    //     $moneda2_id = $moneda2_id[0]->moneda;
-    //     if ($moneda_id != $moneda2_id) {
-    //         $tasa_cambio =  \DB::select("select monto_equivalente from tasa where moneda_local =" . $moneda_id . " and moneda_equivalente =" . $moneda2_id);
-    //         $tasa_cambio =  $tasa_cambio[0]->monto_equivalente;
-    //         $cuentaDebito->saldo_inicial =  $cuentaDebito->saldo_inicial - $monto;
-    //         $monto = $monto * (float)$tasa_cambio;
-    //         $cuentaCredito->saldo_inicial =  $cuentaCredito->saldo_inicial + $monto;
-    //     } else {
-    //         $cuentaDebito->saldo_inicial =  $cuentaDebito->saldo_inicial - $monto;
-    //         $cuentaCredito->saldo_inicial =  $cuentaCredito->saldo_inicial + $monto;
-    //     }
-    //     $cuentaDebito->save();
-    //     $cuentaCredito->save();
-    // }
+   
     public function convertir($usuario)
     {
         $moneda_local = \DB::select("select id from moneda where usuario_id =" . $usuario . " and nacional ='1'");
@@ -46,7 +26,6 @@ class GraficosController extends Controller
 
     public function Cuentas_actuales_con_sus_respectivos_saldos(Request $request)
     {
-        $this->traslados(18, 19, 300);
         $usuario = \Auth::user()->id;
         $tipo = $request->tipo;
         if ($tipo == 'cuentas') {
