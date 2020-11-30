@@ -76,21 +76,22 @@
             <div class="card mb-4">
                 <div class="card-header">
                     <div class="row">
-                        <div class="col-sm-6">
+                        <div class="col-sm-12">
                             <i class="fas fa-chart-bar mr-1"></i>
-                            Transacciones por fecha
+                            Gástos e ingresos en el último año
                         </div>
-                        <div class="col-sm-3">
-                            <input class="form-control" type="date" value="2011-08-19" id="example-date-input">
-                        </div>
-                        <div class="col-sm-3">
-                            <button class="btn btn-primary">Buscar</button>
-
-                        </div>
-
                     </div>
-                    <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
                 </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h4 class="text-center" id="nadaAnio">No hay datos para mostrar</h4>
+                        </div>
+                    </div>
+                    <canvas id="PieChartUltimoAnio" width="100%" height="40"></canvas>
+
+                </div>
+
             </div>
         </div>
         <div class="col-xl-6">
@@ -113,8 +114,33 @@
                         </div>
 
                     </div>
-                    <div class="card-body"><canvas id="PieChart" width="100%" height="40"></canvas></div>
+
                 </div>
+                <div class="card-body"><canvas id="PieChart" width="100%" height="40"></canvas></div>
+
+            </div>
+        </div>
+
+        <div class="col-xl-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <i class="fas fa-chart-bar mr-1"></i>
+                            Último mes
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h4 class="text-center" id="nada">No hay datos para mostrar</h4>
+                        </div>
+                    </div>
+                    <canvas id="PieChartUltimoMes" width="100%" height="40"></canvas>
+
+                </div>
+
             </div>
         </div>
     </div>
