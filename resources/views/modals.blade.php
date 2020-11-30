@@ -545,7 +545,7 @@
                         @endif
 
 
-                        
+
                         <!-- select categoria-->
                         <div class="form-group">
                             <label class="small mb-1" for="categoria">Seleccione una categoria</label>
@@ -759,6 +759,155 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                     <button type="submit" class="btn" style="background-color:  #2874a6; color: white;">Registrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endif
+
+
+<!-- Modal crear tasas-->
+<div class="modal fade" id="crear_tasas" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form method="POST" action="{{ route('registrar_tasa') }}">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Crear tasa</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" value="1" id="monto_local" name="monto_local" readonly>
+                                </div>
+                            </div>
+                            <div class="col-sm-9">
+                                <div class="form-group">
+                                    <select class="form-control" id="moneda_local" name="moneda_local" style="font-size: 15px;">
+                                        @isset($monedas)
+                                        @foreach ($monedas as $moneda)
+                                        <option value="{{$moneda->id}}" style="font-size: 15px;">{{$moneda->nombre_corto}}</option>
+                                        @endforeach
+                                        @endisset
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+                        <p class="at-3 ab-2 text-center lead">Es equivalente a</p>
+
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="monto_equivalente" name="monto_equivalente">
+                                </div>
+                            </div>
+                            <div class="col-sm-9">
+                                <div class="form-group">
+                                    <select class="form-control" id="moneda_equivalente" name="moneda_equivalente" style="font-size: 15px;">
+                                        @isset($monedas)
+                                        @foreach ($monedas as $moneda)
+                                        <option value="{{$moneda->id}}" style="font-size: 15px;">{{$moneda->nombre_corto}}</option>
+                                        @endforeach
+                                        @endisset
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn" style="background-color:  #2874a6; color: white;">Registrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@if(session("mensaje") && session("editarTasaModal"))
+<!-- Modal editar tasas-->
+<div class="modal fade" id="editar_tasas" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form method="POST" action="{{ route('actualizarTasa') }}">
+                @csrf
+                <input type="hidden" name="id" id="id" value="{{session('editarTasaModal')->id}}">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Ediatr tasa</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" value="1" id="monto_local" name="monto_local" readonly>
+                                </div>
+                            </div>
+                            <div class="col-sm-9">
+                                <div class="form-group">
+                                    <select class="form-control" id="moneda_local" name="moneda_local" style="font-size: 15px;">
+                                        @isset($monedas)
+                                        @foreach ($monedas as $moneda)
+                                        @if(session('editarTasaModal')->moneda_local == $moneda->id)
+                                        <option value="{{$moneda->id}}" style="font-size: 15px;" selected>{{$moneda->nombre_corto}}</option>
+
+                                        @else
+                                        <option value="{{$moneda->id}}" style="font-size: 15px;">{{$moneda->nombre_corto}}</option>
+
+                                        @endif
+                                        @endforeach
+                                        @endisset
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+                        <p class="at-3 ab-2 text-center lead">Es equivalente a</p>
+
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="monto_equivalente" name="monto_equivalente" value="{{session('editarTasaModal')->monto_equivalente}}">
+                                </div>
+                            </div>
+                            <div class="col-sm-9">
+                                <div class="form-group">
+                                    <select class="form-control" id="moneda_equivalente" name="moneda_equivalente" style="font-size: 15px;">
+                                    @isset($monedas)
+                                        @foreach ($monedas as $moneda)
+                                        @if(session('editarTasaModal')->moneda_equivalente == $moneda->id)
+                                        <option value="{{$moneda->id}}" style="font-size: 15px;" selected>{{$moneda->nombre_corto}}</option>
+
+                                        @else
+                                        <option value="{{$moneda->id}}" style="font-size: 15px;">{{$moneda->nombre_corto}}</option>
+
+                                        @endif
+                                        @endforeach
+                                        @endisset
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn" style="background-color:  #2874a6; color: white;">Editar</button>
                 </div>
             </form>
         </div>

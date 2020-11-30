@@ -77,6 +77,13 @@ Route::get('/borrarTransaccion/{id}', [App\Http\Controllers\TransaccionControlle
 Route::get('/editarTransacciones/{id}', [App\Http\Controllers\TransaccionController::class, 'edit'])->name('editarTransacciones');
 Route::post('/actualizarTransacciones', [App\Http\Controllers\TransaccionController::class, 'update'])->name('actualizarTransacciones');
 
+//rutas tasa
+Route::get('/tasas', [App\Http\Controllers\tasaController::class, 'index'])->name('tasa');
+Route::post('/registrar_tasa', [App\Http\Controllers\tasaController::class, 'store'])->name('registrar_tasa');
+Route::get('/borrarTasa/{id}', [App\Http\Controllers\tasaController::class, 'destroy'])->name('borrarTasa');
+Route::get('/editarTasa/{id}', [App\Http\Controllers\tasaController::class, 'edit'])->name('editarTasa');
+Route::post('/actualizarTasa', [App\Http\Controllers\tasaController::class, 'update'])->name('actualizarTasa');
+
 
 Route::get('/usuario', function () {
     $correo = $_REQUEST['correo'];

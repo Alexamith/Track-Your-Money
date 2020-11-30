@@ -1,0 +1,84 @@
+@extends('layouts.app')
+
+@section('content')
+<div class="container">
+
+    <h1 class="mt-4">Administración de tasas de conversión <i class="fas fa-coins"></i></h1>
+
+    <div class="card mb-4">
+        <div class="card-body" style="background-color:  #2874a6 ; color: white;">
+            <strong>{{ Auth::user()->name }}</strong>
+            @if(!isset($monedas) )
+            <i class="fas fa-sad-cry"></i> al parecer no tienes ninguna moneda registrada.
+            <a href="#" class="btn btn-outline-*" style="border-color: white;" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-plus-square" style="color: white;"></i></a>
+            @elseif(!isset($tasas))
+            <i class="fas fa-sad-cry"></i> al parecer no tienes ninguna tasa registrada.
+            <a href="#" class="btn btn-outline-*" style="border-color: white;" data-toggle="modal" data-target="#crear_tasas"><i class="fas fa-plus-square" style="color: white;"></i></a>
+          
+            @else
+            la siguiente tabla almacena las monedas que has registrado con fecha específica de creación
+            @endif
+        </div>
+    </div>
+    @isset($tasas)
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-table mr-1"></i>
+            <strong>Mis tasas</strong> 
+            @if(session("mensaje") && session("local"))
+             <p style="color: red;">{{session("local")}}</p>
+            @endif
+            @if(Session::has('iguales'))
+                    {{Session::get('iguales')}}
+                @endif
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Moneda Local</th>
+                            <th>Valor</th>
+                            <th>Moneda Extranjera </th>
+                            <th>Equivalencia</th>
+                            <th>Fecha de creación</th>
+                            <th><a href="#" class="btn btn-outline-*" style="border-color: #2874a6;" data-toggle="modal" data-target="#crear_tasas"><i class="fas fa-plus-square" style="color: #2874a6 ;"></i></a></th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Moneda Local</th>
+                            <th>Valor</th>
+                            <th>Moneda extranjera</th>
+                            <th>Tasa</th>
+                            <th>Fecha de creación</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        @foreach ($tasas ?? '' as $tasa)
+                        <tr>
+
+                            <td>{{$tasa->local}}</td>
+                            <td>{{$tasa->monto_local}}</td>
+                            <td>{{$tasa->extranjera}}</td>
+                            <td>{{$tasa->monto_equivalente}}</td>
+                            <td>{{$tasa->created_at}}</td>
+                            <td>
+                                <a href="{{ url('editarTasa/'.$tasa->id) }}" id="btn-edit" class="btn btn-outline-*" style="border-color: #2874a6 ;">
+                                    <i class="fas fa-edit" style="color: #2874a6 ;"></i>
+                                </a>
+                                <a href="{{ url('borrarTasa/'.$tasa->id) }}"  class="btn btn-outline-*" style="border-color: #ff0000 ;">
+                                    <i class="fas fa-trash-alt" style="color: #ff0000 ;"></i>
+                                </a></td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    @endisset
+
+</div>
+@endsection

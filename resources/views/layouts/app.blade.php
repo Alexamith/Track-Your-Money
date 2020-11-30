@@ -22,7 +22,7 @@
             <strong>
                 @if (Auth::check())
 
-                <a class="navbar-brand" style="color: white; font-size: 25px;  " href="{{ url('/home') }}">TrackYourMoney.com <i class="fas fa-dollar-sign"></i></a>
+                <a class="navbar-brand" style="color: white; font-size: 25px;  " href="{{ url('/home') }}">TrackYourMoney.com <i class="fas fa-dollar-sign"> </i></a>
                 @else
                 <a class="navbar-brand" style="color: white; font-size: 25px;" href="{{ url('/') }}">TrackYourMoney.com <i class="fas fa-dollar-sign"></i></a>
                 @endif
@@ -96,16 +96,24 @@
                         </a>
                         <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav" style="color: white;">
-                                <a class="nav-link" style="color: white;" href="{{ route('moneda') }}">Monedas</a>
-                                <a class="nav-link" style="color: white;" href="{{ route('cuenta') }}">Cuentas</a>
-                                <!-- <a class="nav-link" style="color: white;" href="{{ route('categoria') }}">Categorías</a> -->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" style="color: white;" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Monedas
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a class="nav-link" href="{{ route('moneda') }}">Monedas</a>
+                                        <a class="nav-link" href="{{ route('tasa') }}">Tasas de cambio</a>
+                                        <div class="dropdown-divider"></div>
+                                    </div>
+                                </li>
+                                    <a class="nav-link" style="color: white;" href="{{ route('cuenta') }}">Cuentas</a> 
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" style="color: white;" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         Categorías
                                     </a>
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" href="{{ route('categoria') }}">Categorías</a>
-                                        <a class="dropdown-item" href="{{ route('subcategoria') }}">Subcategorias</a>
+                                        <a class="nav-link" href="{{ route('categoria') }}">Categorías</a>
+                                        <a class="nav-link" href="{{ route('subcategoria') }}">Subcategorias</a>
                                         <div class="dropdown-divider"></div>
                                     </div>
                                 </li>
@@ -113,46 +121,16 @@
                             </nav>
                         </div>
 
-
-
-
-
-                        <a class="nav-link collapsed" style="color: white;" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
-                            <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
-                            Pages
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth">
-                                    Authentication
-                                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                                </a>
-                                <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-parent="#sidenavAccordionPages">
-                                    <nav class="sb-sidenav-menu-nested nav">
-                                        <a class="nav-link" href="login.html">Login</a>
-                                        <a class="nav-link" href="register.html">Register</a>
-                                        <a class="nav-link" href="password.html">Forgot Password</a>
-                                    </nav>
-                                </div>
-                                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
-                                    Error
-                                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                                </a>
-                                <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-parent="#sidenavAccordionPages">
-                                    <nav class="sb-sidenav-menu-nested nav">
-                                        <a class="nav-link" href="401.html">401 Page</a>
-                                        <a class="nav-link" href="404.html">404 Page</a>
-                                        <a class="nav-link" href="500.html">500 Page</a>
-                                    </nav>
-                                </div>
-                            </nav>
-                        </div>
                         <div class="sb-sidenav-menu-heading">Addons</div>
-                        <a class="nav-link" style="color: white;" href="dist/charts.html">
-                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+
+                        <button class="nav-link collapsed btn btn-link " style="color: white;" id="sidebarToggle" href="#">
+                            <div class="sb-nav-link-icon">
+                                <i class="fas fa-chart-area"></i>
+                            </div>
                             Gráficos
-                        </a>
+                        </button>
+
+
                     </div>
                 </div>
                 <div class="sb-sidenav-footer" style="background-color:   #3786eb;">

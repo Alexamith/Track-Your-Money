@@ -8,7 +8,9 @@ class GraficosController extends Controller
 {
     public function Cuentas_actuales_con_sus_respectivos_saldos(Request $request)
     {
+
         $usuario = \Auth::user()->id;
+        $cuentas = \DB::select("select * from moneda where usuario_id =".$usuario."and nacional ='1'");
         $tipo = $request->tipo;
         if ($tipo == 'cuentas') {
             $cuentas = \DB::select("select * from cuenta where usuario_id =" . $usuario . " order by saldo_inicial");

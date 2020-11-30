@@ -103,7 +103,7 @@ function gastos(arreglo) {
     labelsGastos.push(element.categoria_padre);
     dataGastos.push(element.presupuesto);
   }
-  var myLineChart = new Chart(ctxGastos, {
+  var myLineChart = new Chart(ctxGastos, { 
     type: 'line',
     data: {
       labels: labelsGastos,
