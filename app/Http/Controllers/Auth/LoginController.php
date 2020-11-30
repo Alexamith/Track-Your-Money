@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+
 class LoginController extends Controller
 {
     /*
@@ -48,7 +49,7 @@ class LoginController extends Controller
      */
     public function redirectToProvider($provider)
     {
- 
+
         return Socialite::driver($provider)->redirect();
     }
 
@@ -62,17 +63,20 @@ class LoginController extends Controller
         $user = Socialite::driver($provider)->user();
         $name = $user->name;
         $email = $user->email;
+        if (empty($name)) {
+            $name = $user->email;
+        }
         $password = $user->id;
-        if ($this->autenticar($email,$password)) {
+        if ($this->autenticar($email, $password)) {
             // Authentication passed...
             return redirect()->intended('home');
-        }else{
-             User::create([
+        } else {
+            User::create([
                 'name' => $name,
                 'email' => $email,
                 'password' => Hash::make($password),
             ]);
-            if ($this->autenticar($email,$password)) {
+            if ($this->autenticar($email, $password)) {
                 // Authentication passed...
                 return redirect()->intended('home');
             }
@@ -82,8 +86,20 @@ class LoginController extends Controller
     {
         if (\Auth::attempt(['email' => $email, 'password' => $password])) {
             return true;
-        }else{
+        } else {
             return false;
         }
-}
+    }
+    /**
+     * Envia al usuario a la pagina de inicio de GitHub.
+     */
+    // public function redirectToGitHub()
+    // {
+    //     return Socialite::driver('github')->redirect();
+    // }
+    // public function handleGitHubCallback()
+    // {
+    //     $githubUser = Socialite::driver('github')->user();
+    //     return "Bienvenido {$githubUser->name} ({$githubUser->nickname})";
+    // }
 }

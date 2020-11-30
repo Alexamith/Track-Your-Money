@@ -51,6 +51,7 @@
                     </form>
                     <p class="at-3 ab-2 text-center lead">-o-</p>
                     <a href="{{ url('/auth/redirect/google') }}" class="btn btn-block btn-lg btn-outline-danger"><i class="fab fa-google"></i></a>
+                    <a href="{{ url('/auth/redirect/github') }}" class="btn btn-block btn-lg btn-outline-danger"><i class="fab fa-github"></i></a>
                 </div>
             </div>
         </div>
