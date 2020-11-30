@@ -82,7 +82,8 @@ class GraficosController extends Controller
         }
         if ($tipo == 'mes') {
             $mes = getdate();
-            $mes = $mes['mon']; 
+            // $mes = $mes['mon']; 
+            $mes =11;
             // $mes = $mes-1;
             $cuentas = \DB::select("select sum(t.monto) as gastos
             from transaccion as t
@@ -127,6 +128,29 @@ class GraficosController extends Controller
             and cu.usuario_id =".$usuario."
             and c.tipo = 2
             and (SELECT EXTRACT(YEAR FROM t.created_at)) = ".$year);
+            return \Response::json($cuentas);
+        }
+        if ($tipo == 'mesCalendario') {
+            $mes = $request->mes;
+            $cuentas = \DB::select("select sum(t.monto) as gastos
+            from transaccion as t
+            join categoria as c
+            on t.categoria = c.id
+            join cuenta cu
+            on t.cuenta = cu.id
+            and cu.usuario_id =".$usuario."
+            and c.tipo = 1
+            and (SELECT EXTRACT(MONTH FROM t.created_at)) =".$mes."
+            union
+            select sum(t.monto) as ingresos
+            from transaccion as t
+            join categoria as c
+            on t.categoria = c.id
+            join cuenta cu
+            on t.cuenta = cu.id
+            and cu.usuario_id =".$usuario."
+            and c.tipo = 2
+            and (SELECT EXTRACT(MONTH FROM t.created_at)) = ".$mes);
             return \Response::json($cuentas);
         }
 

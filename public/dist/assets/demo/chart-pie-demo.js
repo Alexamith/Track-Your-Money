@@ -129,3 +129,46 @@ function ultimoAnio(arreglo) {
       });
   }
 }
+
+// AJAX
+$("#mesCalendarioBtn").click(function(e) {
+  var mes = jQuery("#mesCalendarioInput").val();
+
+  var formData = {
+      tipo: "mesCalendario",
+      mes: mes
+  };
+
+  $.ajax({
+      url: "http://trackyourmoney.com/graficos",
+      method: "get",
+      data: formData,
+      dataType: "json",
+      success: function(respuesta) {
+          grafico_mesCalendario(respuesta);
+      },
+      error: function() {
+          console.log("No se ha podido obtener la información");
+      }
+  });
+});
+function grafico_mesCalendario(arreglo) {
+  if (arreglo[0].gastos == null) {
+      alert("No hay datos para mostrar");
+  } else {
+    $("#nadaMesCalendario").hide();
+      var Pie = document.getElementById("PieChartUltimoMesCalendario");
+      var myPieChart = new Chart(Pie, {
+          type: "pie",
+          data: {
+              labels: ["Gastos", "Ingresos"],
+              datasets: [
+                  {
+                      data: [arreglo[0].gastos, arreglo[1].gastos],
+                      backgroundColor: ["#dc3545", "#28a745"]
+                  }
+              ]
+          }
+      });
+  }
+}

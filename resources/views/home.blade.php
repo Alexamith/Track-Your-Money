@@ -125,9 +125,9 @@
             <div class="card mb-4">
                 <div class="card-header">
                     <div class="row">
-                        <div class="col-sm-4">
+                        <div class="col-sm-12">
                             <i class="fas fa-chart-bar mr-1"></i>
-                            Último mes
+                            Gastos e ingresos en el último mes
                         </div>
                     </div>
                 </div>
@@ -138,6 +138,70 @@
                         </div>
                     </div>
                     <canvas id="PieChartUltimoMes" width="100%" height="40"></canvas>
+
+                </div>
+
+            </div>
+        </div>
+        <div class="col-xl-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <i class="fas fa-chart-bar mr-1"></i>
+                            Gastos e ingresos mes calendario
+                        </div>
+                        <div class="col-sm-4">
+                            <select class="form-control" id="mesCalendarioInput">
+                                <option value="1">Enero</option>
+                                <option value="2">Febrero</option>
+                                <option value="3">Marzo</option>
+                                <option value="4">Abril</option>
+                                <option value="5">Mayo</option>
+                                <option value="6">Junio</option>
+                                <option value="7">Julio</option>
+                                <option value="8">Agosto</option>
+                                <option value="9">Septiembre</option>
+                                <option value="10">Octubre</option>
+                                <option value="11">Noviembre</option>
+                                <option value="12">Diciembre</option>
+                            </select>
+                            <!-- <input type="text" class="form-control" placeholder="2020"> -->
+                        </div>
+                        <div class="col-sm-2">
+                            <button class="btn btn-primary" id="mesCalendarioBtn">Buscar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h4 class="text-center" id="nadaMesCalendario">No hay datos para mostrar</h4>
+                        </div>
+                    </div>
+                    <canvas id="PieChartUltimoMesCalendario" width="100%" height="40"></canvas>
+
+                </div>
+
+            </div>
+        </div>
+        <div class="col-xl-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <i class="fas fa-chart-bar mr-1"></i>
+                            Gastos e ingresos mes año calendario
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h4 class="text-center" id="nadaAnioCalendario">No hay datos para mostrar</h4>
+                        </div>
+                    </div>
+                    <canvas id="PieChartUltimoAnioCalendario" width="100%" height="40"></canvas>
 
                 </div>
 
