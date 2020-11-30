@@ -6,7 +6,39 @@ use Illuminate\Http\Request;
 
 class GraficosController extends Controller
 {
-   
+    public function __construct()
+    {
+        // $this->FunctionName();
+    }
+   public function FunctionName()
+   {
+       # code...
+         $usuario = 11;
+         $fecha1 = '28/11/2020';
+         $fecha2 = '01/12/2020';
+        //  dd($fecha1);
+        // echo date("Y-m-d", strtotime("2020-11-29"))."\n"; 
+        $cuentas = \DB::select("select sum(t.monto) as gastos
+        from transaccion as t
+        join categoria as c
+        on t.categoria = c.id
+        join cuenta cu
+        on t.cuenta = cu.id
+        and cu.usuario_id =".$usuario."
+        and c.tipo = 1
+        and t.created_at between '".$fecha1."' and '".$fecha2."'
+        union
+        select sum(t.monto) as ingresos
+        from transaccion as t
+        join categoria as c
+        on t.categoria = c.id
+        join cuenta cu
+        on t.cuenta = cu.id
+        and cu.usuario_id =".$usuario."
+        and c.tipo = 2
+        and t.created_at between '".$fecha1."' and '".$fecha2."'");
+        dd($cuentas);
+   }
     public function convertir($usuario)
     {
         $moneda_local = \DB::select("select id from moneda where usuario_id =" . $usuario . " and nacional ='1'");
@@ -40,5 +72,33 @@ class GraficosController extends Controller
             $cuentas = \DB::select("select c.categoria_padre, c.presupuesto from categoria as c where usuario_id =" . $usuario . " and c.tipo = 1 order by c.presupuesto");
             return \Response::json($cuentas);
         }
+
+    
+        if ($tipo == 'entre_2_fechas') {
+            $fecha1 = $request->fecha_incio;
+            $fecha2 = $request->fecha_fin;
+            $cuentas = \DB::select("select sum(t.monto) as gastos
+            from transaccion as t
+            join categoria as c
+            on t.categoria = c.id
+            join cuenta cu
+            on t.cuenta = cu.id
+            and cu.usuario_id =".$usuario."
+            and c.tipo = 1
+            and t.created_at between '".$fecha1."' and '".$fecha2."'
+            union
+            select sum(t.monto) as ingresos
+            from transaccion as t
+            join categoria as c
+            on t.categoria = c.id
+            join cuenta cu
+            on t.cuenta = cu.id
+            and cu.usuario_id =".$usuario."
+            and c.tipo = 2
+            and t.created_at between '".$fecha1."' and '".$fecha2."'");
+            return \Response::json($cuentas);
+        }
+
+
     }
 }

@@ -90,16 +90,4 @@ class LoginController extends Controller
             return false;
         }
     }
-    /**
-     * Envia al usuario a la pagina de inicio de GitHub.
-     */
-    // public function redirectToGitHub()
-    // {
-    //     return Socialite::driver('github')->redirect();
-    // }
-    // public function handleGitHubCallback()
-    // {
-    //     $githubUser = Socialite::driver('github')->user();
-    //     return "Bienvenido {$githubUser->name} ({$githubUser->nickname})";
-    // }
 }

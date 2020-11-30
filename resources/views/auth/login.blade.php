@@ -10,8 +10,8 @@
                     <h3 class="text-center font-weight-light my-4">Inicio de sesión Track <i class="fas fa-dollar-sign"></i></h3>
                 </div>
                 <div class="card-body">
-                
-                <hr>
+
+                    <hr>
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
 
@@ -46,12 +46,21 @@
                         <div class="form-group">
 
                             <button type="submit" class="btn btn-block btn-lg" style="background-color: #2874a6; color:white;">Entrar</button>
-                            
+
                         </div>
                     </form>
-                    <p class="at-3 ab-2 text-center lead">-o-</p>
-                    <a href="{{ url('/auth/redirect/google') }}" class="btn btn-block btn-lg btn-outline-danger"><i class="fab fa-google"></i></a>
-                    <a href="{{ url('/auth/redirect/github') }}" class="btn btn-block btn-lg btn-outline-danger"><i class="fab fa-github"></i></a>
+                    <!-- <p class="at-3 ab-2 text-center lead">-o-</p> -->
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <a href="{{ url('/auth/redirect/google') }}" class="btn btn-block btn-lg btn-outline-danger"><i class="fab fa-google"></i></a>
+                        </div>
+                        <div class="col-sm-4">
+                            <a href="{{ url('/auth/redirect/github') }}" class="btn btn-block btn-lg btn-outline-dark"><i class="fab fa-github"></i></a>
+                        </div>
+                        <div class="col-sm-4">
+                            <a href="{{ url('/auth/redirect/github') }}" class="btn btn-block btn-lg btn-outline-info"><i class="fab fa-linkedin"></i></a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
