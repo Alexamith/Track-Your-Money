@@ -49,7 +49,7 @@ class LoginController extends Controller
      */
     public function redirectToProvider($provider)
     {
-
+       
         return Socialite::driver($provider)->redirect();
     }
 
@@ -61,10 +61,14 @@ class LoginController extends Controller
     public function handleProviderCallback($provider)
     {
         $user = Socialite::driver($provider)->user();
+
         $name = $user->name;
         $email = $user->email;
         if (empty($name)) {
             $name = $user->email;
+        }
+        if ($email == null) {
+            $email = $user->nickname."@ejemplo.com";
         }
         $password = $user->id;
         if ($this->autenticar($email, $password)) {

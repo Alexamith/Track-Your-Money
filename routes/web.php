@@ -16,19 +16,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('auth.login');
 });
-    // Route::get('/home', function () {
-    //     $un_dolar_es_igual_a = 610.74;
-    //     $un_colon_es_igual_a = 0.0016;
 
-    //     $cantidad_de_colones = 10564;
-    //     $cantidad_de_dolares = 33;
 
-    //     $conversion_euro_a_colones = $un_dolar_es_igual_a * $cantidad_de_dolares;
-    //     $conversion_colones_a_dolares = $un_colon_es_igual_a * $cantidad_de_colones;
-
-    //     echo $cantidad_de_dolares." dólares equivalen a ".number_format($conversion_euro_a_colones, 2)." <hr>";
-    //     echo number_format($cantidad_de_colones, 2)." colones equivalen a ".number_format($conversion_colones_a_dolares, 2)." dólares";
-    // });
 Auth::routes();
 
 Route::get('/auth/redirect/{provider}', [App\Http\Controllers\Auth\LoginController::class, 'redirectToProvider']);
