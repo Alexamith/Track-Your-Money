@@ -473,9 +473,16 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="small mb-1" for="monto">Monto</label>
-                                    <input class="form-control py-4" id="monto" name="monto" type="text" required autocomplete="new-monto" placeholder="610.15" />
+                                    <input class="form-control py-4" id="monto" name="monto" type="text" required autocomplete="new-monto" placeholder="$" />
                                 </div>
                             </div>
+                           
+                        </div>
+                        <div class="form-group">
+                            <div class="form-group">
+                                    <label class="small mb-1" for="fecha">Fecha</label>
+                                    <input class="form-control" type="date" value="2020-12-01" id="fecha" name="fecha">
+                                </div>
                         </div>
 
                     </div>

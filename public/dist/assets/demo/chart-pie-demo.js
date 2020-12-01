@@ -41,8 +41,7 @@ $("#dos_fechas").click(function(e) {
 // let frutas = "Uvas: "+300+"\n"+"Manzanas:"+1000;
 
 function grafico_entre_2_fechas(arreglo) {
-  
-    if (arreglo[0] == null) {
+    if (Array.isArray(arreglo)) {
         alert("No hay datos para mostrar");
     } else {
         var Pie = document.getElementById("PieChart");
@@ -52,7 +51,7 @@ function grafico_entre_2_fechas(arreglo) {
                 labels: ["Gastos", "Ingresos"],
                 datasets: [
                     {
-                        data: [arreglo[0].saldo, arreglo[1].saldo],
+                        data: [arreglo.gastos, arreglo.ingresos],
                         backgroundColor: ["#dc3545", "#28a745"]
                     }
                 ]

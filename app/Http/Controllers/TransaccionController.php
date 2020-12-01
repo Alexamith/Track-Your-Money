@@ -105,7 +105,7 @@ class TransaccionController extends Controller
             "cuenta" => $request->cuenta,
             "monto" => $request->monto,
             "detalle" => $request->detalle,
-
+            "created_at" => $request->fecha
         ];
         $tipocategoria = \DB::select("select tp.id from categoria as c
         join tipo_categoria as tp
