@@ -74,16 +74,11 @@ class GraficosController extends Controller
             $cuentas = \DB::select("select c.categoria_padre, c.presupuesto from categoria as c where usuario_id =" . $usuario . " and c.tipo = 1 order by c.presupuesto");
             return \Response::json($cuentas);
         }
-
-        // if (1==1) {
         if ($tipo == 'entre_2_fechas') {
             $fecha1 = $request->fecha_incio;
             $fecha2 = $request->fecha_fin;
-
             $moneda_local = \DB::select("select id from moneda where usuario_id = 11 and nacional ='1'");
             $moneda_local = $moneda_local[0]->id;
-
-
             $suma_gastos_e_ingresos_moneda_local = [];
             $suma_gastos_e_ingresos_moneda_extranjera = \DB::select("select sum(t.monto) as monto,m.id, c.tipo,m.nacional
             from transaccion as t join categoria as c on t.categoria = c.id join cuenta cu on t.cuenta = cu.id join moneda as m on cu.moneda = m.id and cu.usuario_id =11
@@ -91,16 +86,12 @@ class GraficosController extends Controller
             select sum(t.monto) as monto,m.id, c.tipo,m.nacional from transaccion as t join categoria as c on t.categoria = c.id join cuenta cu on t.cuenta = cu.id
             join moneda as m on cu.moneda = m.id and cu.usuario_id =11 and c.tipo = 2 
             and t.created_at between '" . $fecha1 . "' and '" . $fecha2 . "' group by  m.id,c.tipo order by (monto)");
- 
-            // dd($suma_gastos_e_ingresos_moneda_extranjera);
             if (empty($suma_gastos_e_ingresos_moneda_extranjera)) {
                 $suma_gastos_e_ingresos_moneda_local = [];
                 return \Response::json($suma_gastos_e_ingresos_moneda_local);
             } else {
                 $total_gastos = 0;
                 $total_ingresos = 0;
-
-
                 foreach ($suma_gastos_e_ingresos_moneda_extranjera as $key) {
                     if ($key->id != $moneda_local) {
                         $buscar_tasa_de_conversion = \DB::select("select monto_equivalente from tasa where moneda_local =" . $key->id . " and moneda_equivalente =" . $moneda_local);
@@ -114,105 +105,143 @@ class GraficosController extends Controller
                     }
                 }
                 $suma_gastos_e_ingresos_moneda_local =["gastos"=>$total_gastos,"ingresos"=>$total_ingresos];
-                // dd($suma_gastos_e_ingresos_moneda_local);
                 return \Response::json($suma_gastos_e_ingresos_moneda_local);
             }
         }
         if ($tipo == 'mes') {
             $mes = getdate();
-            // $mes = $mes['mon']; 
-            $mes = 11;
-            // $mes = $mes-1;
-            $cuentas = \DB::select("select sum(t.monto) as gastos
-            from transaccion as t
-            join categoria as c
-            on t.categoria = c.id
-            join cuenta cu
-            on t.cuenta = cu.id
-            and cu.usuario_id =" . $usuario . "
-            and c.tipo = 1
-            and (SELECT EXTRACT(MONTH FROM t.created_at)) =" . $mes . "
-            union
-            select sum(t.monto) as ingresos
-            from transaccion as t
-            join categoria as c
-            on t.categoria = c.id
-            join cuenta cu
-            on t.cuenta = cu.id
-            and cu.usuario_id =" . $usuario . "
-            and c.tipo = 2
-            and (SELECT EXTRACT(MONTH FROM t.created_at)) = " . $mes);
-            return \Response::json($cuentas);
+            $mes = $mes['mon']-1; 
+
+            $moneda_local = \DB::select("select id from moneda where usuario_id = 11 and nacional ='1'");
+            $moneda_local = $moneda_local[0]->id;
+            $suma_gastos_e_ingresos_moneda_local = [];
+            $suma_gastos_e_ingresos_moneda_extranjera = \DB::select("select sum(t.monto) as monto,m.id, c.tipo,m.nacional
+            from transaccion as t join categoria as c on t.categoria = c.id join cuenta cu on t.cuenta = cu.id join moneda as m on cu.moneda = m.id and cu.usuario_id =11
+            and c.tipo = 1 and (SELECT EXTRACT(MONTH FROM t.created_at)) =".$mes." group by  m.id,c.tipo union
+            select sum(t.monto) as monto,m.id, c.tipo,m.nacional from transaccion as t join categoria as c on t.categoria = c.id join cuenta cu on t.cuenta = cu.id
+            join moneda as m on cu.moneda = m.id and cu.usuario_id =11 and c.tipo = 2 
+            and (SELECT EXTRACT(MONTH FROM t.created_at)) = ".$mes." group by  m.id,c.tipo order by (monto)");
+            if (empty($suma_gastos_e_ingresos_moneda_extranjera)) {
+                $suma_gastos_e_ingresos_moneda_local = [];
+                return \Response::json($suma_gastos_e_ingresos_moneda_local);
+            } else {
+                $total_gastos = 0;
+                $total_ingresos = 0;
+                foreach ($suma_gastos_e_ingresos_moneda_extranjera as $key) {
+                    if ($key->id != $moneda_local) {
+                        $buscar_tasa_de_conversion = \DB::select("select monto_equivalente from tasa where moneda_local =" . $key->id . " and moneda_equivalente =" . $moneda_local);
+                        $buscar_tasa_de_conversion = (float)$buscar_tasa_de_conversion[0]->monto_equivalente;
+                        $key->monto = $buscar_tasa_de_conversion * (float)$key->monto;
+                    }
+                    if ($key->tipo == 1) {
+                        $total_gastos = $total_gastos + $key->monto;
+                    } else if ($key->tipo == 2) {
+                        $total_ingresos = $total_ingresos + $key->monto;
+                    }
+                }
+                $suma_gastos_e_ingresos_moneda_local =["gastos"=>$total_gastos,"ingresos"=>$total_ingresos];
+                return \Response::json($suma_gastos_e_ingresos_moneda_local);
+            }
         }
         if ($tipo == 'anio') {
             $year = getdate();
-            $year = $year['year'];
-            $cuentas = \DB::select("select sum(t.monto) as gastos
-            from transaccion as t
-            join categoria as c
-            on t.categoria = c.id
-            join cuenta cu
-            on t.cuenta = cu.id
-            and cu.usuario_id =" . $usuario . "
-            and c.tipo = 1
-            and (SELECT EXTRACT(YEAR FROM t.created_at)) =" . $year . "
-            union
-            select sum(t.monto) as ingresos
-            from transaccion as t
-            join categoria as c
-            on t.categoria = c.id
-            join cuenta cu
-            on t.cuenta = cu.id
-            and cu.usuario_id =" . $usuario . "
-            and c.tipo = 2
-            and (SELECT EXTRACT(YEAR FROM t.created_at)) = " . $year);
-            return \Response::json($cuentas);
+            $year = $year['year']-1;
+            $moneda_local = \DB::select("select id from moneda where usuario_id = 11 and nacional ='1'");
+            $moneda_local = $moneda_local[0]->id;
+            $suma_gastos_e_ingresos_moneda_local = [];
+            $suma_gastos_e_ingresos_moneda_extranjera = \DB::select("select sum(t.monto) as monto,m.id, c.tipo,m.nacional
+            from transaccion as t join categoria as c on t.categoria = c.id join cuenta cu on t.cuenta = cu.id join moneda as m on cu.moneda = m.id and cu.usuario_id =11
+            and c.tipo = 1 and (SELECT EXTRACT(YEAR FROM t.created_at)) =".$year." group by  m.id,c.tipo union
+            select sum(t.monto) as monto,m.id, c.tipo,m.nacional from transaccion as t join categoria as c on t.categoria = c.id join cuenta cu on t.cuenta = cu.id
+            join moneda as m on cu.moneda = m.id and cu.usuario_id =11 and c.tipo = 2 
+            and (SELECT EXTRACT(YEAR FROM t.created_at)) = ".$year." group by  m.id,c.tipo order by (monto)");
+            if (empty($suma_gastos_e_ingresos_moneda_extranjera)) {
+                $suma_gastos_e_ingresos_moneda_local = [];
+                return \Response::json($suma_gastos_e_ingresos_moneda_local);
+            } else {
+                $total_gastos = 0;
+                $total_ingresos = 0;
+                foreach ($suma_gastos_e_ingresos_moneda_extranjera as $key) {
+                    if ($key->id != $moneda_local) {
+                        $buscar_tasa_de_conversion = \DB::select("select monto_equivalente from tasa where moneda_local =" . $key->id . " and moneda_equivalente =" . $moneda_local);
+                        $buscar_tasa_de_conversion = (float)$buscar_tasa_de_conversion[0]->monto_equivalente;
+                        $key->monto = $buscar_tasa_de_conversion * (float)$key->monto;
+                    }
+                    if ($key->tipo == 1) {
+                        $total_gastos = $total_gastos + $key->monto;
+                    } else if ($key->tipo == 2) {
+                        $total_ingresos = $total_ingresos + $key->monto;
+                    }
+                }
+                $suma_gastos_e_ingresos_moneda_local =["gastos"=>$total_gastos,"ingresos"=>$total_ingresos];
+                return \Response::json($suma_gastos_e_ingresos_moneda_local);
+            }
         }
         if ($tipo == 'mesCalendario') {
             $mes = $request->mes;
-            $cuentas = \DB::select("select sum(t.monto) as gastos
-            from transaccion as t
-            join categoria as c
-            on t.categoria = c.id
-            join cuenta cu
-            on t.cuenta = cu.id
-            and cu.usuario_id =" . $usuario . "
-            and c.tipo = 1
-            and (SELECT EXTRACT(MONTH FROM t.created_at)) =" . $mes . "
-            union
-            select sum(t.monto) as ingresos
-            from transaccion as t
-            join categoria as c
-            on t.categoria = c.id
-            join cuenta cu
-            on t.cuenta = cu.id
-            and cu.usuario_id =" . $usuario . "
-            and c.tipo = 2
-            and (SELECT EXTRACT(MONTH FROM t.created_at)) = " . $mes);
-            return \Response::json($cuentas);
+            $moneda_local = \DB::select("select id from moneda where usuario_id = 11 and nacional ='1'");
+            $moneda_local = $moneda_local[0]->id;
+            $suma_gastos_e_ingresos_moneda_local = [];
+            $suma_gastos_e_ingresos_moneda_extranjera = \DB::select("select sum(t.monto) as monto,m.id, c.tipo,m.nacional
+            from transaccion as t join categoria as c on t.categoria = c.id join cuenta cu on t.cuenta = cu.id join moneda as m on cu.moneda = m.id and cu.usuario_id =11
+            and c.tipo = 1 and (SELECT EXTRACT(MONTH FROM t.created_at)) =".$mes." group by  m.id,c.tipo union
+            select sum(t.monto) as monto,m.id, c.tipo,m.nacional from transaccion as t join categoria as c on t.categoria = c.id join cuenta cu on t.cuenta = cu.id
+            join moneda as m on cu.moneda = m.id and cu.usuario_id =11 and c.tipo = 2 
+            and (SELECT EXTRACT(MONTH FROM t.created_at)) = ".$mes." group by  m.id,c.tipo order by (monto)");
+            if (empty($suma_gastos_e_ingresos_moneda_extranjera)) {
+                $suma_gastos_e_ingresos_moneda_local = [];
+                return \Response::json($suma_gastos_e_ingresos_moneda_local);
+            } else {
+                $total_gastos = 0;
+                $total_ingresos = 0;
+                foreach ($suma_gastos_e_ingresos_moneda_extranjera as $key) {
+                    if ($key->id != $moneda_local) {
+                        $buscar_tasa_de_conversion = \DB::select("select monto_equivalente from tasa where moneda_local =" . $key->id . " and moneda_equivalente =" . $moneda_local);
+                        $buscar_tasa_de_conversion = (float)$buscar_tasa_de_conversion[0]->monto_equivalente;
+                        $key->monto = $buscar_tasa_de_conversion * (float)$key->monto;
+                    }
+                    if ($key->tipo == 1) {
+                        $total_gastos = $total_gastos + $key->monto;
+                    } else if ($key->tipo == 2) {
+                        $total_ingresos = $total_ingresos + $key->monto;
+                    }
+                }
+                $suma_gastos_e_ingresos_moneda_local =["gastos"=>$total_gastos,"ingresos"=>$total_ingresos];
+                return \Response::json($suma_gastos_e_ingresos_moneda_local);
+            }
         }
         if ($tipo == 'anioCalendario') {
-            $anio = $request->anio;
-            $cuentas = \DB::select("select sum(t.monto) as gastos
-            from transaccion as t
-            join categoria as c
-            on t.categoria = c.id
-            join cuenta cu
-            on t.cuenta = cu.id
-            and cu.usuario_id =" . $usuario . "
-            and c.tipo = 1
-            and (SELECT EXTRACT(YEAR FROM t.created_at)) =" . $anio . "
-            union
-            select sum(t.monto) as ingresos
-            from transaccion as t
-            join categoria as c
-            on t.categoria = c.id
-            join cuenta cu          
-            on t.cuenta = cu.id
-            and cu.usuario_id =" . $usuario . "
-            and c.tipo = 2
-            and (SELECT EXTRACT(YEAR FROM t.created_at)) = " . $anio);
-            return \Response::json($cuentas);
+            $year = $request->anio;
+            $moneda_local = \DB::select("select id from moneda where usuario_id = 11 and nacional ='1'");
+            $moneda_local = $moneda_local[0]->id;
+            $suma_gastos_e_ingresos_moneda_local = [];
+            $suma_gastos_e_ingresos_moneda_extranjera = \DB::select("select sum(t.monto) as monto,m.id, c.tipo,m.nacional
+            from transaccion as t join categoria as c on t.categoria = c.id join cuenta cu on t.cuenta = cu.id join moneda as m on cu.moneda = m.id and cu.usuario_id =11
+            and c.tipo = 1 and (SELECT EXTRACT(YEAR FROM t.created_at)) =".$year." group by  m.id,c.tipo union
+            select sum(t.monto) as monto,m.id, c.tipo,m.nacional from transaccion as t join categoria as c on t.categoria = c.id join cuenta cu on t.cuenta = cu.id
+            join moneda as m on cu.moneda = m.id and cu.usuario_id =11 and c.tipo = 2 
+            and (SELECT EXTRACT(YEAR FROM t.created_at)) = ".$year." group by  m.id,c.tipo order by (monto)");
+            if (empty($suma_gastos_e_ingresos_moneda_extranjera)) {
+                $suma_gastos_e_ingresos_moneda_local = [];
+                return \Response::json($suma_gastos_e_ingresos_moneda_local);
+            } else {
+                $total_gastos = 0;
+                $total_ingresos = 0;
+                foreach ($suma_gastos_e_ingresos_moneda_extranjera as $key) {
+                    if ($key->id != $moneda_local) {
+                        $buscar_tasa_de_conversion = \DB::select("select monto_equivalente from tasa where moneda_local =" . $key->id . " and moneda_equivalente =" . $moneda_local);
+                        $buscar_tasa_de_conversion = (float)$buscar_tasa_de_conversion[0]->monto_equivalente;
+                        $key->monto = $buscar_tasa_de_conversion * (float)$key->monto;
+                    }
+                    if ($key->tipo == 1) {
+                        $total_gastos = $total_gastos + $key->monto;
+                    } else if ($key->tipo == 2) {
+                        $total_ingresos = $total_ingresos + $key->monto;
+                    }
+                }
+                $suma_gastos_e_ingresos_moneda_local =["gastos"=>$total_gastos,"ingresos"=>$total_ingresos];
+                return \Response::json($suma_gastos_e_ingresos_moneda_local);
+            }
         }
     }
 

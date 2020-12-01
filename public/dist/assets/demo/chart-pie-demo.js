@@ -3,18 +3,6 @@ Chart.defaults.global.defaultFontFamily =
     '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
 Chart.defaults.global.defaultFontColor = "#292b2c";
 
-// Pie Chart Example
-// var Pie = document.getElementById("PieChart");
-// var myPieChart = new Chart(Pie, {
-//   type: 'pie',
-//   data: {
-//     labels: ["Blue", "Red", "Yellow", "Green"],
-//     datasets: [{
-//       data: [12.21, 15.58, 19.25, 8.32],
-//       backgroundColor: ['#007bff', '#dc3545', '#ffc107', '#28a745'],
-//     }],
-//   },
-// });
 // AJAX
 $("#dos_fechas").click(function(e) {
     var fecha1 = jQuery("#id_2_fechas_btn1").val();
@@ -44,6 +32,9 @@ function grafico_entre_2_fechas(arreglo) {
     if (Array.isArray(arreglo)) {
         alert("No hay datos para mostrar");
     } else {
+        
+        $("#nadaFecha").hide();
+
         var Pie = document.getElementById("PieChart");
         var myPieChart = new Chart(Pie, {
             type: "pie",
@@ -78,7 +69,7 @@ $.ajax({
     }
 });
 function ultimoMes(arreglo) {
-    if (arreglo[0].gastos != null) {
+    if (!Array.isArray(arreglo)) {
         $("#nada").hide();
         var Pie = document.getElementById("PieChartUltimoMes");
         var myPieChart = new Chart(Pie, {
@@ -87,12 +78,13 @@ function ultimoMes(arreglo) {
                 labels: ["Gastos", "Ingresos"],
                 datasets: [
                     {
-                        data: [arreglo[0].gastos, arreglo[1].gastos],
+                        data: [arreglo.gastos, arreglo.ingresos],
                         backgroundColor: ["#007bff", "#ffc107"]
                     }
                 ]
             }
         });
+
     }
 }
 
@@ -113,22 +105,22 @@ $.ajax({
   }
 });
 function ultimoAnio(arreglo) {
-  if (arreglo[0].gastos != null) {
-      $("#nadaAnio").hide();
-      var Pie = document.getElementById("PieChartUltimoAnio");
-      var myPieChart = new Chart(Pie, {
-          type: "pie",
-          data: {
-              labels: ["Gastos", "Ingresos"],
-              datasets: [
-                  {
-                      data: [arreglo[0].gastos, arreglo[1].gastos],
-                      backgroundColor: ["#ff8700", "#d51fbf"]
-                  }
-              ]
-          }
-      });
-  }
+    if (!Array.isArray(arreglo)) {
+        $("#nadaAnio").hide();
+        var Pie = document.getElementById("PieChartUltimoAnio");
+        var myPieChart = new Chart(Pie, {
+            type: "pie",
+            data: {
+                labels: ["Gastos", "Ingresos"],
+                datasets: [
+                    {
+                        data: [arreglo.gastos, arreglo.ingresos],
+                        backgroundColor: ["#ff8700", "#d51fbf"]
+                    }
+                ]
+            }
+        });
+    }
 }
 
 // AJAX
@@ -154,9 +146,9 @@ $("#mesCalendarioBtn").click(function(e) {
   });
 });
 function grafico_mesCalendario(arreglo) {
-  if (arreglo[0].gastos == null) {
+    if (Array.isArray(arreglo)) {
       alert("No hay datos para mostrar");
-  } else {
+    }else {
     $("#nadaMesCalendario").hide();
       var Pie = document.getElementById("PieChartUltimoMesCalendario");
       var myPieChart = new Chart(Pie, {
@@ -165,7 +157,7 @@ function grafico_mesCalendario(arreglo) {
               labels: ["Gastos", "Ingresos"],
               datasets: [
                   {
-                      data: [arreglo[0].gastos, arreglo[1].gastos],
+                      data: [arreglo.gastos, arreglo.ingresos],
                       backgroundColor: ["#dc3545", "#28a745"]
                   }
               ]
@@ -201,9 +193,9 @@ $("#anioCalendarioBtn").click(function(e) {
   });
 });
 function grafico_anioCalendario(arreglo) {
-  if (arreglo[0].gastos == null) {
-      alert("No hay datos para mostrar");
-  } else {
+    if (Array.isArray(arreglo)) {
+        alert("No hay datos para mostrar");
+      } else {
     $("#nadaAnioCalendario").hide();
       var Pie = document.getElementById("PieChartUltimoAnioCalendario");
       var myPieChart = new Chart(Pie, {
@@ -212,8 +204,8 @@ function grafico_anioCalendario(arreglo) {
               labels: ["Gastos", "Ingresos"],
               datasets: [
                   {
-                      data: [arreglo[0].gastos, arreglo[1].gastos],
-                      backgroundColor: ["#dc3545", "#28a745"]
+                      data: [arreglo.gastos, arreglo.ingresos],
+                      backgroundColor: ["#ff0000", "#542cb2"]
                   }
               ]
           }

@@ -116,7 +116,12 @@
                     </div>
 
                 </div>
-                <div class="card-body"><canvas id="PieChart" width="100%" height="40"></canvas></div>
+                <div class="card-body">
+                    <div class="col-sm-12">
+                        <h4 class="text-center" id="nadaFecha">No hay datos para mostrar</h4>
+                    </div>
+                    <canvas id="PieChart" width="100%" height="40"></canvas>
+                </div>
 
             </div>
         </div>
@@ -188,14 +193,14 @@
         <div class="col-xl-6">
             <div class="card mb-4">
                 <div class="card-header">
-                <div class="row">
+                    <div class="row">
                         <div class="col-sm-6">
                             <i class="fas fa-chart-bar mr-1"></i>
                             Gastos e ingresos año calendario
                         </div>
                         <div class="col-sm-4">
-                           
-                        <input type="text" class="form-control" id="anioCalendarioInput" placeholder="2020">
+
+                            <input type="text" class="form-control" id="anioCalendarioInput" placeholder="2020">
                         </div>
                         <div class="col-sm-2">
                             <button class="btn btn-primary" id="anioCalendarioBtn">Buscar</button>
