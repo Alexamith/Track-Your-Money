@@ -188,10 +188,17 @@
         <div class="col-xl-6">
             <div class="card mb-4">
                 <div class="card-header">
-                    <div class="row">
-                        <div class="col-sm-12">
+                <div class="row">
+                        <div class="col-sm-6">
                             <i class="fas fa-chart-bar mr-1"></i>
-                            Gastos e ingresos mes año calendario
+                            Gastos e ingresos año calendario
+                        </div>
+                        <div class="col-sm-4">
+                           
+                        <input type="text" class="form-control" id="anioCalendarioInput" placeholder="2020">
+                        </div>
+                        <div class="col-sm-2">
+                            <button class="btn btn-primary" id="anioCalendarioBtn">Buscar</button>
                         </div>
                     </div>
                 </div>

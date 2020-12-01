@@ -41,7 +41,8 @@ $("#dos_fechas").click(function(e) {
 // let frutas = "Uvas: "+300+"\n"+"Manzanas:"+1000;
 
 function grafico_entre_2_fechas(arreglo) {
-    if (arreglo[0].gastos == null) {
+  
+    if (arreglo[0] == null) {
         alert("No hay datos para mostrar");
     } else {
         var Pie = document.getElementById("PieChart");
@@ -51,12 +52,13 @@ function grafico_entre_2_fechas(arreglo) {
                 labels: ["Gastos", "Ingresos"],
                 datasets: [
                     {
-                        data: [arreglo[0].gastos, arreglo[1].gastos],
+                        data: [arreglo[0].saldo, arreglo[1].saldo],
                         backgroundColor: ["#dc3545", "#28a745"]
                     }
                 ]
             }
         });
+        arreglo = [];
     }
 }
 
@@ -172,3 +174,102 @@ function grafico_mesCalendario(arreglo) {
       });
   }
 }
+
+
+
+
+
+
+$("#anioCalendarioBtn").click(function(e) {
+  var anio = jQuery("#anioCalendarioInput").val();
+
+  var formData = {
+      tipo: "anioCalendario",
+      anio: anio
+  };
+
+  $.ajax({
+      url: "http://trackyourmoney.com/graficos",
+      method: "get",
+      data: formData,
+      dataType: "json",
+      success: function(respuesta) {
+          grafico_anioCalendario(respuesta);
+      },
+      error: function() {
+          console.log("No se ha podido obtener la información");
+      }
+  });
+});
+function grafico_anioCalendario(arreglo) {
+  if (arreglo[0].gastos == null) {
+      alert("No hay datos para mostrar");
+  } else {
+    $("#nadaAnioCalendario").hide();
+      var Pie = document.getElementById("PieChartUltimoAnioCalendario");
+      var myPieChart = new Chart(Pie, {
+          type: "pie",
+          data: {
+              labels: ["Gastos", "Ingresos"],
+              datasets: [
+                  {
+                      data: [arreglo[0].gastos, arreglo[1].gastos],
+                      backgroundColor: ["#dc3545", "#28a745"]
+                  }
+              ]
+          }
+      });
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
