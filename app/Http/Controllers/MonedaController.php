@@ -56,7 +56,7 @@ class MonedaController extends Controller
             "nombre_corto" => $request->name,
             "simbolo" => $request->simbolo,
             "descripcion" => $request->descripcion,
-            "tasa" => $request->tasa_cambio,
+            "tasa" => 0,
             "usuario_id" => \Auth::user()->id,
             "nacional" => $request->nacional
         ];

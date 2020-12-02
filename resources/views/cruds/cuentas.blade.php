@@ -31,7 +31,7 @@
                     <thead>
                         <tr>
                             <th>Moneda</th>
-                            <th>Tasa</th>
+                            <!-- <th>Tasa</th> -->
                             <th>Nombre cuenta</th>
                             <th>Descripcion</th>
                             <th>Saldo</th>
@@ -42,7 +42,7 @@
                     <tfoot>
                         <tr>
                             <th>Moneda</th>
-                            <th>Tasa</th>
+                            <!-- <th>Tasa</th> -->
                             <th>Nombre cuenta</th>
                             <th>Descripcion</th>
                             <th>Saldo</th>
@@ -55,7 +55,7 @@
                         <tr>
 
                             <td>{{$cuenta->nombre}}</td>
-                            <td>{{$cuenta->tasa}}</td>
+                            <!-- <td>{{$cuenta->tasa}}</td> -->
                             <td>{{$cuenta->nombre_corto}}</td>
                             <td>{{$cuenta->descripcion}}</td>
                             <td>{{$cuenta->saldo_inicial}}</td>

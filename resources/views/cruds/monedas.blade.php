@@ -34,7 +34,7 @@
                             <th>Nombre</th>
                             <th>Simbolo</th>
                             <th>Descripción</th>
-                            <th>Tasa</th>
+                            <!-- <th>Tasa</th> -->
                             <th>Fecha de creación</th>
                             <th>Adicional</th>
                             <th><a href="#" class="btn btn-outline-*" style="border-color: #2874a6;" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-plus-square" style="color: #2874a6 ;"></i></a></th>
@@ -45,7 +45,7 @@
                             <th>Nombre</th>
                             <th>Simbolo</th>
                             <th>Descripción</th>
-                            <th>Tasa</th>
+                            <!-- <th>Tasa</th> -->
                             <th>Fecha de creación</th>
                             <th>Adicional</th>
                             <th>Opciones</th>
@@ -58,7 +58,7 @@
                             <td>{{$moneda->nombre_corto}}</td>
                             <td>{{$moneda->simbolo}}</td>
                             <td>{{$moneda->descripcion}}</td>
-                            <td>{{$moneda->tasa}}</td>
+                            <!-- <td>{{$moneda->tasa}}</td> -->
                             <td>{{$moneda->created_at}}</td>
                             @if($moneda->nacional == 1)
                             <td>Moneda local</td>

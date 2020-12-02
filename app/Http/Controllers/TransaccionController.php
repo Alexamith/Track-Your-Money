@@ -43,7 +43,6 @@ class TransaccionController extends Controller
             return view('cruds.transacciones', ['tipos' => $tipos, 'categorias' => $categorias, 'cuentas' => $cuentas]);
         }
     }
-
     public function obtener_categorias($usuario)
     {
         $categorias = \DB::select("select c.id,c.categoria_padre, tp.tipo, c.descripcion,c.presupuesto
@@ -100,44 +99,94 @@ class TransaccionController extends Controller
     public function store(Request $request)
     {
         $tralado =  $request->traslado;
-        $dataTransaccion = [
-            "categoria" => $request->categoria,
-            "cuenta" => $request->cuenta,
-            "monto" => $request->monto,
-            "detalle" => $request->detalle,
-            "created_at" => $request->fecha
-        ];
-        $tipocategoria = \DB::select("select tp.id from categoria as c
-        join tipo_categoria as tp
-        on c.tipo = tp.id
-        and c.id =" . $request->categoria);
+        $usuario = \Auth::user()->id;
+        $moneda_local = \DB::select("select id from moneda where usuario_id =" . $usuario . " and nacional = '1'");
 
-        if ($tralado == true) {
-            if ($tipocategoria[0]->id == 3) {
-                if ($request->cuenta == $request->cuentaCredito) {
-                    session()->flash('iguales', 'No puede hacer un traslado en la misma cuenta');
-                    return redirect()->route('transaccion');
+        if (empty($moneda_local)) {
+            return redirect()->route("transaccion")
+                ->with("mensaje", 'dasdadasdasdas')
+                ->with("no_tiene_moneda_principal", "Por favor registre una moneda principal");
+        } else {
+            $moneda_local = $moneda_local[0]->id;
+            $moneda_cuenta = \DB::select("select moneda from cuenta where id =" . $request->cuenta);
+            $moneda_cuenta =  $moneda_cuenta[0]->moneda;
+            $tasa_conversion_moneda1_y_moneda2 = \DB::select("select * from tasa where moneda_local =" . $moneda_local . " and moneda_equivalente = " . $moneda_cuenta);
+            $tasa_conversion_moneda2_y_moneda1 = \DB::select("select * from tasa where moneda_local =" . $moneda_cuenta . " and moneda_equivalente = " . $moneda_local);
+            $dataTransaccion = [
+                "categoria" => $request->categoria,
+                "cuenta" => $request->cuenta,
+                "monto" => $request->monto,
+                "detalle" => $request->detalle,
+                "created_at" => $request->fecha
+            ];
+            $tipocategoria = \DB::select("select tp.id from categoria as c
+                join tipo_categoria as tp
+                on c.tipo = tp.id
+                and c.id =" . $request->categoria);
+
+            if ($tralado == true) {
+                if ($tipocategoria[0]->id == 3) {
+                    if ($request->cuenta == $request->cuentaCredito) {
+                        session()->flash('iguales', 'No puede hacer un traslado en la misma cuenta');
+                        return redirect()->route('transaccion');
+                    } else {
+                        if ($moneda_local == $moneda_cuenta) {
+                            Transaccion::create($dataTransaccion);
+                            $max = \DB::select("SELECT MAX(id) as id FROM transaccion;");
+
+                            $dataTraslado = [
+                                "cuenta_debito" =>  $request->cuenta,
+                                "monto_debitado" => $request->monto,
+                                "cuenta_credito" => $request->cuentaCredito,
+                                "monto_acreditado" => $request->monto,
+                                "transaccion" => $max[0]->id
+                            ];
+                            $this->traslados($request->cuenta, $request->cuentaCredito, $request->monto);
+                            traslado::create($dataTraslado);
+                        } else {
+                            if (empty($tasa_conversion_moneda1_y_moneda2) or empty($tasa_conversion_moneda2_y_moneda1)) {
+                                return redirect()->route("transaccion")
+                                    ->with("mensaje", 'dasdadasdasdas')
+                                    ->with("no_tiene_tasas_principal", "Por favor registre una tasa de cambio para las modenas que usó");
+                            } else {
+                                Transaccion::create($dataTransaccion);
+                                $max = \DB::select("SELECT MAX(id) as id FROM transaccion;");
+
+                                $dataTraslado = [
+                                    "cuenta_debito" =>  $request->cuenta,
+                                    "monto_debitado" => $request->monto,
+                                    "cuenta_credito" => $request->cuentaCredito,
+                                    "monto_acreditado" => $request->monto,
+                                    "transaccion" => $max[0]->id
+                                ];
+                                $this->traslados($request->cuenta, $request->cuentaCredito, $request->monto);
+                                traslado::create($dataTraslado);
+                            }
+                        }
+                    }
                 } else {
-                    Transaccion::create($dataTransaccion);
-                    $max = \DB::select("SELECT MAX(id) as id FROM transaccion;");
-
-                    $dataTraslado = [
-                        "cuenta_debito" =>  $request->cuenta,
-                        "monto_debitado" => $request->monto,
-                        "cuenta_credito" => $request->cuentaCredito,
-                        "monto_acreditado" => $request->monto,
-                        "transaccion" => $max[0]->id
-                    ];
-                    $this->traslados($request->cuenta, $request->cuentaCredito, $request->monto);
-                    traslado::create($dataTraslado);
+                    session()->flash('sintipotraslado', 'Para realizar traslados tienes que tener una categoria de traslados');
+                    return redirect()->route('transaccion');
                 }
             } else {
-                session()->flash('sintipotraslado', 'Para realizar traslados tienes que tener una categoria de traslados');
-                return redirect()->route('transaccion');
+                if ($moneda_local == $moneda_cuenta) {
+                    Transaccion::create($dataTransaccion);
+                    $this->actualizar_saldo_cuenta($tipocategoria[0]->id, $request->cuenta, $request->monto, 0);
+                } else if ($moneda_local != $moneda_cuenta) {
+                    if (empty($tasa_conversion_moneda1_y_moneda2) or empty($tasa_conversion_moneda2_y_moneda1)) {
+                        return redirect()->route("transaccion")
+                            ->with("mensaje", 'dasdadasdasdas')
+                            ->with("no_tiene_tasas_principal", "Por favor registre una tasa de cambio para las modenas que usó");
+                    } else {
+                        Transaccion::create($dataTransaccion);
+                        $this->actualizar_saldo_cuenta($tipocategoria[0]->id, $request->cuenta, $request->monto, 0);
+                    }
+                }
             }
-        } else {
-            Transaccion::create($dataTransaccion);
-            $this->actualizar_saldo_cuenta($tipocategoria[0]->id, $request->cuenta, $request->monto, 0);
+
+            // } else {
+            //     dd("No tiene una tasa de cambio");
+            // }
         }
 
         return redirect()->route('transaccion');
@@ -147,11 +196,14 @@ class TransaccionController extends Controller
         $cuentaDebito = Cuenta::findOrFail($cuentaD);
         $cuentaCredito = Cuenta::findOrFail($cuentaC);
         $moneda_id = \DB::select("select moneda from cuenta where id =" . $cuentaD);
+        // dd($moneda_id[0]->moneda);
         $moneda_id = $moneda_id[0]->moneda;
         $moneda2_id = \DB::select("select moneda from cuenta where id =" . $cuentaC);
         $moneda2_id = $moneda2_id[0]->moneda;
+        // dd($moneda2_id);
+        // dd($moneda2_id[0]->moneda);
         if ($moneda_id != $moneda2_id) {
-            $tasa_cambio =  \DB::select("select monto_equivalente from tasa where moneda_local =" . $moneda_id . " and moneda_equivalente =" . $moneda2_id);
+            $tasa_cambio =  \DB::select("select monto_equivalente from tasa where moneda_local =" . $moneda_id . " and moneda_equivalente =" . $moneda2_id);            
             $tasa_cambio =  $tasa_cambio[0]->monto_equivalente;
             $cuentaDebito->saldo_inicial =  $cuentaDebito->saldo_inicial - $monto;
             $monto = $monto * (float)$tasa_cambio;
@@ -181,7 +233,7 @@ class TransaccionController extends Controller
                 $moneda2_id = $cuentacredito->moneda;
                 if ($moneda_id != $moneda2_id) {
                     $tasa_cambio =  \DB::select("select monto_equivalente from tasa where moneda_local =" . $moneda_id . " and moneda_equivalente =" . $moneda2_id);
-                    
+
                     $tasa_cambio =  $tasa_cambio[0]->monto_equivalente;
                     $cuentadebito->saldo_inicial = $cuentadebito->saldo_inicial + $monto_antiguo[0]->monto_debitado;
                     $cuentadebito->saldo_inicial = $cuentadebito->saldo_inicial - $monto;

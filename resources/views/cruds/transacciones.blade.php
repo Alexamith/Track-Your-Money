@@ -26,8 +26,14 @@
     @isset($transacciones)
     <div class="card mb-4">
         <div class="card-header">
-            <i class="fas fa-table mr-1"></i>
-            <strong>Mis Transacciones</strong>
+            <strong><p><i class="fas fa-table mr-1"></i> Mis Transacciones</p>  
+                @if(Session::has('no_tiene_moneda_principal'))
+                <p style="color: red;">{{Session::get('no_tiene_moneda_principal')}}</p>
+                @endif
+                @if(Session::has('no_tiene_tasas_principal'))
+                <p style="color: red;">{{Session::get('no_tiene_tasas_principal')}}</p>
+                @endif
+            </strong>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -37,7 +43,7 @@
                             <th>Tipo</th>
                             <th>Cuenta</th>
                             <th>Moneda</th>
-                            <th>Tasa de cambio</th>
+                            <!-- <th>Tasa de cambio</th> -->
                             <th>Monto transacción</th>
                             <th>Detalle</th>
                             <th>Fecha</th>
@@ -49,7 +55,7 @@
                             <th>Tipo</th>
                             <th>Cuenta</th>
                             <th>Moneda</th>
-                            <th>Tasa de cambio</th>
+                            <!-- <th>Tasa de cambio</th> -->
                             <th>Monto transacción</th>
                             <th>Detalle</th>
                             <th>Fecha</th>
@@ -63,7 +69,7 @@
                             <td>{{$transaccion->tipo}}</td>
                             <td>{{$transaccion->nombre}}</td>
                             <td>{{$transaccion->moneda }}</td>
-                            <td>{{$transaccion->tasa}}</td>
+                            <!-- <td>{{$transaccion->tasa}}</td> -->
 
                             @if($transaccion->tipo == 'Ingresos')
                             <td>+ {{$transaccion->monto}}</td>

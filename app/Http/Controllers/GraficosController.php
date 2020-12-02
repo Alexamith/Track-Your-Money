@@ -13,33 +13,6 @@ class GraficosController extends Controller
     }
     public function FunctionName()
     {
-        // $moneda_local = \DB::select("select id from moneda where usuario_id = 11 and nacional ='1'");
-        // $moneda_local=$moneda_local[0]->id;
-        // $suma_gastos_e_ingresos_moneda_local =\DB::select("select sum(t.monto) as saldo from transaccion as t join cuenta as c on t.cuenta = c.id join categoria as ca on t.categoria = ca.id
-        // join moneda as m on c.moneda = m.id and c.usuario_id = 11 and ca.tipo = 1 and m.nacional = true and t.created_at between '".$fecha1."' and '".$fecha2."'
-        // union select sum(t.monto) as saldo from transaccion as t join cuenta as c on t.cuenta = c.id join categoria as ca on t.categoria = ca.id 
-        // join moneda as m on c.moneda = m.id and c.usuario_id = 11 and ca.tipo = 2 and m.nacional = true and t.created_at between '".$fecha1."' and '".$fecha2."'");
-
-        // $suma_gastos_e_ingresos_moneda_local[0]->saldo = (float)$suma_gastos_e_ingresos_moneda_local[0]->saldo;
-        // $suma_gastos_e_ingresos_moneda_local[1]->saldo = (float)$suma_gastos_e_ingresos_moneda_local[1]->saldo;
-        // $suma_gastos_e_ingresos_moneda_extranjera = \DB::select("select sum(t.monto) as monto, m.id, ca.tipo from transaccion as t join cuenta as c
-        // on t.cuenta = c.id join categoria as ca on t.categoria = ca.id join moneda as m on c.moneda = m.id and c.usuario_id = 11 and ca.tipo = 1 and m.nacional = false
-        // and t.created_at between '".$fecha1."' and '".$fecha2."' group by  m.id,ca.tipo union select sum(t.monto) as monto, m.id,ca.tipo from transaccion as t join cuenta as c on t.cuenta = c.id join categoria as ca on t.categoria = ca.id
-        // join moneda as m on c.moneda = m.id and c.usuario_id = 11 and ca.tipo = 2 and m.nacional = false and t.created_at between '".$fecha1."' and '".$fecha2."' group by  m.id,ca.tipo order by (monto)");
-
-        // foreach ($suma_gastos_e_ingresos_moneda_extranjera as $key) {
-        //     $buscar_tasa_de_conversion = \DB::select("select monto_equivalente from tasa where moneda_local =" . $key->id . " and moneda_equivalente =" . $moneda_local);
-        //     $buscar_tasa_de_conversion = (double)$buscar_tasa_de_conversion[0]->monto_equivalente;
-        //     $key->monto = $buscar_tasa_de_conversion * (double)$key->monto;
-        //     if($key->tipo == 1){
-        //         $suma_gastos_e_ingresos_moneda_local[0]->saldo = $suma_gastos_e_ingresos_moneda_local[0]->saldo +$key->monto;
-        //     }else if($key->tipo == 2){
-        //         $suma_gastos_e_ingresos_moneda_local[1]->saldo = $suma_gastos_e_ingresos_moneda_local[1]->saldo +$key->monto;
-
-        //     }
-
-        // }
-        // dd($suma_gastos_e_ingresos_moneda_local);    
     }
     public function convertir($usuario)
     {
@@ -77,14 +50,14 @@ class GraficosController extends Controller
         if ($tipo == 'entre_2_fechas') {
             $fecha1 = $request->fecha_incio;
             $fecha2 = $request->fecha_fin;
-            $moneda_local = \DB::select("select id from moneda where usuario_id = 11 and nacional ='1'");
+            $moneda_local = \DB::select("select id from moneda where usuario_id =".$usuario." and nacional ='1'");
             $moneda_local = $moneda_local[0]->id;
             $suma_gastos_e_ingresos_moneda_local = [];
             $suma_gastos_e_ingresos_moneda_extranjera = \DB::select("select sum(t.monto) as monto,m.id, c.tipo,m.nacional
-            from transaccion as t join categoria as c on t.categoria = c.id join cuenta cu on t.cuenta = cu.id join moneda as m on cu.moneda = m.id and cu.usuario_id =11
+            from transaccion as t join categoria as c on t.categoria = c.id join cuenta cu on t.cuenta = cu.id join moneda as m on cu.moneda = m.id and cu.usuario_id =".$usuario."
             and c.tipo = 1 and t.created_at between '" . $fecha1 . "' and '" . $fecha2 . "' group by  m.id,c.tipo union
             select sum(t.monto) as monto,m.id, c.tipo,m.nacional from transaccion as t join categoria as c on t.categoria = c.id join cuenta cu on t.cuenta = cu.id
-            join moneda as m on cu.moneda = m.id and cu.usuario_id =11 and c.tipo = 2 
+            join moneda as m on cu.moneda = m.id and cu.usuario_id =".$usuario." and c.tipo = 2 
             and t.created_at between '" . $fecha1 . "' and '" . $fecha2 . "' group by  m.id,c.tipo order by (monto)");
             if (empty($suma_gastos_e_ingresos_moneda_extranjera)) {
                 $suma_gastos_e_ingresos_moneda_local = [];
@@ -112,14 +85,14 @@ class GraficosController extends Controller
             $mes = getdate();
             $mes = $mes['mon']-1; 
 
-            $moneda_local = \DB::select("select id from moneda where usuario_id = 11 and nacional ='1'");
+            $moneda_local = \DB::select("select id from moneda where usuario_id =".$usuario." and nacional ='1'");
             $moneda_local = $moneda_local[0]->id;
             $suma_gastos_e_ingresos_moneda_local = [];
             $suma_gastos_e_ingresos_moneda_extranjera = \DB::select("select sum(t.monto) as monto,m.id, c.tipo,m.nacional
-            from transaccion as t join categoria as c on t.categoria = c.id join cuenta cu on t.cuenta = cu.id join moneda as m on cu.moneda = m.id and cu.usuario_id =11
+            from transaccion as t join categoria as c on t.categoria = c.id join cuenta cu on t.cuenta = cu.id join moneda as m on cu.moneda = m.id and cu.usuario_id =".$usuario."
             and c.tipo = 1 and (SELECT EXTRACT(MONTH FROM t.created_at)) =".$mes." group by  m.id,c.tipo union
             select sum(t.monto) as monto,m.id, c.tipo,m.nacional from transaccion as t join categoria as c on t.categoria = c.id join cuenta cu on t.cuenta = cu.id
-            join moneda as m on cu.moneda = m.id and cu.usuario_id =11 and c.tipo = 2 
+            join moneda as m on cu.moneda = m.id and cu.usuario_id =".$usuario." and c.tipo = 2 
             and (SELECT EXTRACT(MONTH FROM t.created_at)) = ".$mes." group by  m.id,c.tipo order by (monto)");
             if (empty($suma_gastos_e_ingresos_moneda_extranjera)) {
                 $suma_gastos_e_ingresos_moneda_local = [];
@@ -146,14 +119,14 @@ class GraficosController extends Controller
         if ($tipo == 'anio') {
             $year = getdate();
             $year = $year['year']-1;
-            $moneda_local = \DB::select("select id from moneda where usuario_id = 11 and nacional ='1'");
+            $moneda_local = \DB::select("select id from moneda where usuario_id =".$usuario." and nacional ='1'");
             $moneda_local = $moneda_local[0]->id;
             $suma_gastos_e_ingresos_moneda_local = [];
             $suma_gastos_e_ingresos_moneda_extranjera = \DB::select("select sum(t.monto) as monto,m.id, c.tipo,m.nacional
-            from transaccion as t join categoria as c on t.categoria = c.id join cuenta cu on t.cuenta = cu.id join moneda as m on cu.moneda = m.id and cu.usuario_id =11
+            from transaccion as t join categoria as c on t.categoria = c.id join cuenta cu on t.cuenta = cu.id join moneda as m on cu.moneda = m.id and cu.usuario_id =".$usuario."
             and c.tipo = 1 and (SELECT EXTRACT(YEAR FROM t.created_at)) =".$year." group by  m.id,c.tipo union
             select sum(t.monto) as monto,m.id, c.tipo,m.nacional from transaccion as t join categoria as c on t.categoria = c.id join cuenta cu on t.cuenta = cu.id
-            join moneda as m on cu.moneda = m.id and cu.usuario_id =11 and c.tipo = 2 
+            join moneda as m on cu.moneda = m.id and cu.usuario_id =".$usuario." and c.tipo = 2 
             and (SELECT EXTRACT(YEAR FROM t.created_at)) = ".$year." group by  m.id,c.tipo order by (monto)");
             if (empty($suma_gastos_e_ingresos_moneda_extranjera)) {
                 $suma_gastos_e_ingresos_moneda_local = [];
@@ -179,14 +152,14 @@ class GraficosController extends Controller
         }
         if ($tipo == 'mesCalendario') {
             $mes = $request->mes;
-            $moneda_local = \DB::select("select id from moneda where usuario_id = 11 and nacional ='1'");
+            $moneda_local = \DB::select("select id from moneda where usuario_id =".$usuario." and nacional ='1'");
             $moneda_local = $moneda_local[0]->id;
             $suma_gastos_e_ingresos_moneda_local = [];
             $suma_gastos_e_ingresos_moneda_extranjera = \DB::select("select sum(t.monto) as monto,m.id, c.tipo,m.nacional
-            from transaccion as t join categoria as c on t.categoria = c.id join cuenta cu on t.cuenta = cu.id join moneda as m on cu.moneda = m.id and cu.usuario_id =11
+            from transaccion as t join categoria as c on t.categoria = c.id join cuenta cu on t.cuenta = cu.id join moneda as m on cu.moneda = m.id and cu.usuario_id =".$usuario."
             and c.tipo = 1 and (SELECT EXTRACT(MONTH FROM t.created_at)) =".$mes." group by  m.id,c.tipo union
             select sum(t.monto) as monto,m.id, c.tipo,m.nacional from transaccion as t join categoria as c on t.categoria = c.id join cuenta cu on t.cuenta = cu.id
-            join moneda as m on cu.moneda = m.id and cu.usuario_id =11 and c.tipo = 2 
+            join moneda as m on cu.moneda = m.id and cu.usuario_id =".$usuario." and c.tipo = 2 
             and (SELECT EXTRACT(MONTH FROM t.created_at)) = ".$mes." group by  m.id,c.tipo order by (monto)");
             if (empty($suma_gastos_e_ingresos_moneda_extranjera)) {
                 $suma_gastos_e_ingresos_moneda_local = [];
@@ -212,14 +185,14 @@ class GraficosController extends Controller
         }
         if ($tipo == 'anioCalendario') {
             $year = $request->anio;
-            $moneda_local = \DB::select("select id from moneda where usuario_id = 11 and nacional ='1'");
+            $moneda_local = \DB::select("select id from moneda where usuario_id =".$usuario." and nacional ='1'");
             $moneda_local = $moneda_local[0]->id;
             $suma_gastos_e_ingresos_moneda_local = [];
             $suma_gastos_e_ingresos_moneda_extranjera = \DB::select("select sum(t.monto) as monto,m.id, c.tipo,m.nacional
-            from transaccion as t join categoria as c on t.categoria = c.id join cuenta cu on t.cuenta = cu.id join moneda as m on cu.moneda = m.id and cu.usuario_id =11
+            from transaccion as t join categoria as c on t.categoria = c.id join cuenta cu on t.cuenta = cu.id join moneda as m on cu.moneda = m.id and cu.usuario_id =".$usuario."
             and c.tipo = 1 and (SELECT EXTRACT(YEAR FROM t.created_at)) =".$year." group by  m.id,c.tipo union
             select sum(t.monto) as monto,m.id, c.tipo,m.nacional from transaccion as t join categoria as c on t.categoria = c.id join cuenta cu on t.cuenta = cu.id
-            join moneda as m on cu.moneda = m.id and cu.usuario_id =11 and c.tipo = 2 
+            join moneda as m on cu.moneda = m.id and cu.usuario_id =".$usuario." and c.tipo = 2 
             and (SELECT EXTRACT(YEAR FROM t.created_at)) = ".$year." group by  m.id,c.tipo order by (monto)");
             if (empty($suma_gastos_e_ingresos_moneda_extranjera)) {
                 $suma_gastos_e_ingresos_moneda_local = [];

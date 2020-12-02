@@ -29,7 +29,7 @@
                             <input class="form-control py-4 @error('presupuesto') is-invalid @enderror" value="{{ old('descripcion') }}" required autocomplete="descripcion" id="descripcion" name="descripcion" type="descripcion" aria-describedby="descripcionHelp" placeholder="Descripcion" />
                         </div>
                         <div class="form-row">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="small mb-1" for="inputPassword">Simbolo</label>
                                     <input class="form-control py-4 @error('simbolo') is-invalid @enderror" id="simbolo" name="simbolo" type="simbolo" placeholder="Simbolo" required autocomplete="new-simbolo" />
@@ -40,13 +40,10 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="small mb-1" for="inputConfirmPassword">Tasa de cambio</label>
-                                    <input class="form-control py-4" id="tasa_cambio" name="tasa_cambio" type="text" required autocomplete="new-tasa_cambio" placeholder="610.15" />
-                                </div>
-                            </div>
-                            <div class="col-md-4">
+                          
+                                    <input class="form-control py-4" id="tasa_cambio" name="tasa_cambio" type="hidden" value="0" />
+                           
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <center><label class="small mb-1" for="inputConfirmPassword">Moneda nacional</label></center>
                                     <input class="form-control py-4" type="checkbox" id="nacional" id="nacional">
@@ -98,7 +95,7 @@
                             <input class="form-control py-4 @error('descripcion') is-invalid @enderror" value="{{session('tipo')->descripcion}}" required autocomplete="descripcion" id="descripcion" name="descripcion" type="descripcion" aria-describedby="descripcionHelp" placeholder="Descripcion" />
                         </div>
                         <div class="form-row">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="small mb-1" for="inputPassword">Simbolo</label>
                                     <input class="form-control py-4 @error('simbolo') is-invalid @enderror" id="simbolo" name="simbolo" value="{{session('tipo')->simbolo}}" type="text" placeholder="Simbolo" required autocomplete="new-simbolo" />
@@ -109,13 +106,11 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="small mb-1" for="inputConfirmPassword">Tasa de cambio</label>
-                                    <input class="form-control py-4" id="tasa_cambio" name="tasa_cambio" type="text" value="{{session('tipo')->tasa}}" required autocomplete="new-tasa_cambio" placeholder="610.15" />
-                                </div>
-                            </div>
-                            <div class="col-md-4">
+                          
+                                    <input class="form-control py-4" id="tasa_cambio" name="tasa_cambio" type="hidden" value="0" required autocomplete="new-tasa_cambio" placeholder="610.15" />
+                            
+                           
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <center><label class="small mb-1" for="inputConfirmPassword">Moneda nacional</label></center>
                                     @if(session('tipo')->nacional == 1)
